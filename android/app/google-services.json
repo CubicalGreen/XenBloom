@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "362609573305",
+    "project_id": "xen-bloom",
+    "storage_bucket": "xen-bloom.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:362609573305:android:e016819bfde557256fca68",
+        "android_client_info": {
+          "package_name": "com.example.xen_bloom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "362609573305-qmjd3mk43i1b8fhvtu63saipa5i8u29j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhzUyMJfIYX3ZJsZNVeRM9IgQPsXh20F4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "362609573305-qmjd3mk43i1b8fhvtu63saipa5i8u29j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
