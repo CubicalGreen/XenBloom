@@ -40,6 +40,7 @@ exports.sendNotification= async (token, message) => {
 exports.addUpdateLog = async (log) => {
   try {
     //await logSchema.validate(log);
+    log.timestamp=new Date();
     // Add the log to the update_log collection in Firestore
     await firestore.collection('update_log').add(log);
     console.log('Log added successfully');
