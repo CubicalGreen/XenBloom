@@ -18,13 +18,10 @@ jobs:
       with:
         node-version: '20'
 
-    - name: Change directory and install dependencies
+    - name: Change directory and install dependencies and Deploying Functions
       run: |
         cd CG_Backend_Functions/functions
         ls -la
         npm install
-
-    - name: Deploy to Firebase
-      run: |
-        cd CG_Backend_Functions/functions
         npm run deploy
+
