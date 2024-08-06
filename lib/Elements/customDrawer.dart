@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:xen_bloom/authentication_screens/google_auth.dart';
 import 'package:xen_bloom/authentication_screens/login_page.dart';
-import 'package:xen_bloom/connect_screen.dart'; // Ensure this import for FirebaseServices
+import 'package:xen_bloom/connect_screen.dart';
+import 'package:xen_bloom/other_screens/name_screen.dart'; // Ensure this import for FirebaseServices
 
 class CustomDrawer extends StatelessWidget {
   @override
@@ -48,6 +49,16 @@ class CustomDrawer extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => ConnectScreen()), // Navigate to the ConnectScreen
+              );
+            },
+          ),
+          ListTile(
+            // leading: Icon(Icons.logout),
+            title: Text('Name'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NameScreen()), // Navigate to the ConnectScreen
               );
             },
           ),

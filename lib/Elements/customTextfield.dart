@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class CustomTextfield extends StatelessWidget {
   final String labelText;
   final IconData icon;
+  final TextEditingController? controller;
 
-  CustomTextfield({required this.labelText, required this.icon});
+  CustomTextfield({required this.labelText, required this.icon, this.controller});
 
   @override
   Widget build(BuildContext context) {
