@@ -16,13 +16,15 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '20' 
-        
-    - name: Moving to functions
-      run: cd CG_Backend_Functions/functions
-      
-    - name: Install dependencies
-      run: npm install
+        node-version: '20'
+
+    - name: Change directory and install dependencies
+      run: |
+        cd CG_Backend_Functions/functions
+        ls -la
+        npm install
 
     - name: Deploy to Firebase
-      run: npm run deploy
+      run: |
+        cd CG_Backend_Functions/functions
+        npm run deploy
