@@ -1,6 +1,7 @@
 import 'dart:async'; // Import for Timer
 import 'package:flutter/material.dart';
 import 'package:xen_bloom/authentication_screens/google_auth.dart';
+import 'package:xen_bloom/connect_screen.dart';
 import 'package:xen_bloom/other_screens/choose_system.dart';
 import '../home_screen/home_page.dart';
 
@@ -98,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await FirebaseServices().signinWithGoogle();
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => ChooseSystem()),
+      MaterialPageRoute(builder: (context) => ConnectScreen()),
     );
   }
 
@@ -130,36 +131,36 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 _buildPage(
                   'assets/images/orboardingImage3.png',
-                  'Arrange your documents',
-                  'Go paper free and create longitudinal health history and share it with anyone with your consent.',
+                  'Experience Hassle-Free Farming',
+                  'Say goodbye to the stress of traditional gardening with our fully automated, easy-to-use system.',
                   w,
                   h,
                 ),
                 _buildPage(
                   'assets/images/onbordingImage1.png',
-                  'Track Vitals',
-                  'Establish unique identity across different healthcare providers in the country.',
+                  'Fresh, Nutrient-Rich Produce',
+                  'Harvest your own fresh, nutrient-rich fruits and vegetables right at home.',
                   w,
                   h,
                 ),
                 _buildPage(
                   'assets/images/orboardingImage2.png',
-                  'Enter healthcare ecosystem',
-                  'Access Various UHI services to ease your medical journey and secure your data.',
+                  'Maximize Your Space',
+                  'Grow up to 30 plants in a sleek, compact design that fits effortlessly into any indoor space.',
                   w,
                   h,
                 ),
                 _buildPage(
                   'assets/images/orboardingImage3.png',
-                  'Arrange your documents',
-                  'Go paper free and create longitudinal health history and share it with anyone with your consent.',
+                  'Experience Hassle-Free Farming',
+                  'Say goodbye to the stress of traditional gardening with our fully automated, easy-to-use system.',
                   w,
                   h,
                 ),
                 _buildPage(
                   'assets/images/onbordingImage1.png',
-                  'Track Vitals',
-                  'Establish unique identity across different healthcare providers in the country.',
+                  'Fresh, Nutrient-Rich Produce',
+                  'Harvest your own fresh, nutrient-rich fruits and vegetables right at home.',
                   w,
                   h,
                 ),

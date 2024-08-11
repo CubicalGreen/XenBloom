@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xen_bloom/other_screens/choose_system.dart';
 import '../home_screen/home_page.dart';
 
 class NameScreen extends StatefulWidget {
@@ -75,7 +76,7 @@ class _NameScreenState extends State<NameScreen> {
     // Perform further actions like navigating to the next screen
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomePage()), // Replace with your home page widget
+      MaterialPageRoute(builder: (context) => ChooseSystem()), // Replace with your home page widget
     );
   }
 

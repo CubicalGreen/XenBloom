@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:xen_bloom/Elements/customTextfield.dart';
+import 'package:xen_bloom/other_screens/choose_system.dart';
+
+import 'other_screens/name_screen.dart';
 
 class ConnectScreen extends StatefulWidget {
   const ConnectScreen({super.key});
@@ -39,7 +42,12 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   width: w * 0.9,
                   height:h * 0.07,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => NameScreen()), // Navigate to the ConnectScreen
+                      );
+                    },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
                     ),

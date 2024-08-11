@@ -44,16 +44,6 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             // leading: Icon(Icons.logout),
-            title: Text('Connect'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ConnectScreen()), // Navigate to the ConnectScreen
-              );
-            },
-          ),
-          ListTile(
-            // leading: Icon(Icons.logout),
             title: Text('Name'),
             onTap: () {
               Navigator.push(
