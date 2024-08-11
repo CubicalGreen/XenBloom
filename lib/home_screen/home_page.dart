@@ -1,14 +1,11 @@
-import 'package:dotted_border/dotted_border.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:xen_bloom/Elements/bottomNavBar.dart';
 import 'package:xen_bloom/Elements/customContainer.dart';
 import 'package:xen_bloom/Elements/customDrawer.dart';
 import 'package:xen_bloom/Elements/customSlider.dart';
 import 'package:xen_bloom/Elements/waterContainer.dart';
-import 'package:xen_bloom/authentication_screens/google_auth.dart';
-import 'package:xen_bloom/authentication_screens/login_page.dart'; // Ensure you have this import
+import 'package:xen_bloom/ph_screens/ph_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,21 +17,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   double _sliderValue = 0.7; // Initial value
   int _selectedIndex = 0; // Index for bottom navigation bar
+  bool _isChecked = false; // Initial checkbox value
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-
-  // void _logout() async {
-  //   // Implement your logout logic here
-  //   await FirebaseServices().googleSignOut(); // Ensure this method exists in your FirebaseServices
-  //   Navigator.pushReplacement(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => LoginScreen()), // Replace with your login screen or initial route
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +32,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: Builder(
           builder: (BuildContext context) => IconButton(
             icon: Icon(Icons.menu),
@@ -75,134 +65,247 @@ class _HomePageState extends State<HomePage> {
       drawer: CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.only(top: 5.0, right: 16, left: 16, bottom: 5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header: Next Cycle Countdown
-            Container(
-              height: h * 0.17,
-              padding: EdgeInsets.only(
-                  top: h * 0.068, left: w * 0.04, right: w * 0.04),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Align(
-                alignment: Alignment.bottomLeft,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: 8,bottom: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Next Cycle in',
-                      style: TextStyle(fontSize: 20),
-                    ),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          '28:42',
-                          style: TextStyle(fontSize: 35),
-                        ),
-                        SizedBox(width: 4),
-                        Align(
-                          alignment: Alignment.bottomCenter,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
                           child: Text(
-                            'mins',
+                            "To Do",
                             style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Image.asset(
+                            'assets/images/dot_icon.png', // Add the path to your dot image here
+                            width: 25, // Adjust the size as needed
+                            height: 35,
                           ),
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: h * 0.007),
-            // Main Content
-            Row(
-              children: [
-                // Left Container
-                Container(
-                  height: h * 0.41,
-                  width: w * 0.445,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Colors.grey.shade300,
-                      width: 2,
+                    Container(
+                      height: 1,
+                      color: Colors.grey.shade200, // Adjust the color as needed
+                      width: double.infinity, // Ensures the line takes up the full width
                     ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(top: h * 0.32),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Row(
                       children: [
-                        CustomSlider(
-                          value: _sliderValue,
-                          onChanged: (newValue) {
+                        Checkbox(
+                          value: _isChecked,
+                          onChanged: (bool? value) {
                             setState(() {
-                              _sliderValue = newValue;
+                              _isChecked = value!;
                             });
                           },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          activeColor: Colors.red, // Change the color of the checkbox
+                        ),
+                        Text(
+                          "Refill the reservoir",
+                          style: TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
-                  ),
-                ),
-                SizedBox(width: w * 0.02),
-                Column(
-                  children: [
-                    CustomContainer(
-                      height: h * 0.2,
-                      width: w * 0.445,
-                      imagePath: 'assets/images/concerntration.png',
-                      title: 'Concentration',
-                      value: '805',
-                      unit: 'ppm',
-                    ),
-                    SizedBox(height: h * 0.01),
-                    CustomContainer(
-                      height: h * 0.2,
-                      width: w * 0.445,
-                      imagePath: 'assets/images/pH.png',
-                      title: 'pH',
-                      value: '5.7',
-                    ),
                   ],
                 ),
-              ],
-            ),
-            // Water Level Screen
-            SizedBox(height: h * 0.01),
-            WaterContainer(),
-            SizedBox(height: h * 0.02),
-            GestureDetector(
-              onTap: () {},
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(5),
-                child: Container(
-                  width: w * 0.9,
-                  height: h * 0.07,
-                  child: DottedBorder(
-                    borderType: BorderType.RRect,
-                    dashPattern: [3, 4],
-                    color: Colors.grey.shade400,
-                    strokeWidth: 1,
-                    child: Center(
-                      child: Text(
-                        'Add a device',
-                        style: TextStyle(
-                          color: Colors.grey.shade400,
-                          fontSize: 20,
+              ),
+              SizedBox(height: h * 0.01),
+              // Header: Next Cycle Countdown
+              Container(
+                height: h * 0.17,
+                padding: EdgeInsets.only(
+                    top: h * 0.068, left: w * 0.04, right: w * 0.04),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Next Cycle in',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: [
+                          Text(
+                            '28:42',
+                            style: TextStyle(fontSize: 35),
+                          ),
+                          SizedBox(width: 4),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Text(
+                              'mins',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: h * 0.007),
+              // Main Content
+              Row(
+                children: [
+                  // Left Container
+                  Container(
+                    height: h * 0.41,
+                    width: w * 0.445,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 2,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(top: h * 0.32),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomSlider(
+                            value: _sliderValue,
+                            onChanged: (newValue) {
+                              setState(() {
+                                _sliderValue = newValue;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: w * 0.02),
+                  Column(
+                    children: [
+                      CustomContainer(
+                        height: h * 0.2,
+                        width: w * 0.445,
+                        imagePath: 'assets/images/concerntration.png',
+                        title: 'Concentration',
+                        value: '805',
+                        unit: 'ppm',
+                      ),
+                      SizedBox(height: h * 0.01),
+                      CustomContainer(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => pHScreen()), // Navigate to the ConnectScreen
+                          );
+                        },
+                        height: h * 0.2,
+                        width: w * 0.445,
+                        imagePath: 'assets/images/pH.png',
+                        title: 'pH',
+                        value: '5.7',
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              // Water Level Screen
+              SizedBox(height: h * 0.01),
+              WaterContainer(),
+              SizedBox(height: h * 0.02),
+              // Updates Section
+              Container(
+                padding: EdgeInsets.only(top: 12,bottom: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            "Updates",
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Image.asset(
+                            'assets/images/dot_icon.png', // Add the path to your dot image here
+                            width: 25, // Adjust the size as needed
+                            height: 35,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      height: 1,
+                      color: Colors.grey.shade200, // Adjust the color as needed
+                      width: double.infinity, // Ensures the line takes up the full width
+                    ),
+                    SizedBox(height: 8),
+                    _buildUpdateRow('08:00', 'ph was recorded 6.8'),
+                    _buildUpdateRow('08:06', 'ph was balanced to 5.6'),
+                    _buildUpdateRow('08:06', 'Nutrients Concentration was recorded 600 ppm'),
+                    _buildUpdateRow('08:06', 'Nutrients Concentration was balanced to 950 ppm'),
+                  ],
+                ),
+              ),
+
+
+              SizedBox(height: h * 0.02),
+              // Add Device Button
+              GestureDetector(
+                onTap: () {},
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: Container(
+                    width: w * 0.9,
+                    height: h * 0.07,
+                    child: DottedBorder(
+                      borderType: BorderType.RRect,
+                      dashPattern: [3, 4],
+                      color: Colors.grey.shade800,
+                      strokeWidth: 1,
+                      child: Center(
+                        child: Text(
+                          'Add a device',
+                          style: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontSize: 20,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -219,6 +322,31 @@ class _HomePageState extends State<HomePage> {
           ),
           CustomBottomNavigationBarItem(
             imagePath: 'assets/images/bottomnavbar_3.png',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUpdateRow(String time, String update) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0,left: 12,right: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            time,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(width: 16),
+          Expanded(
+            child: Text(
+              update,
+              style: TextStyle(fontSize: 16),
+            ),
           ),
         ],
       ),

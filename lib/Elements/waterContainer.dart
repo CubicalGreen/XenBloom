@@ -37,7 +37,7 @@ class _WaterContainerState extends State<WaterContainer> {
                 height: h * 0.08,
                 width: w * 0.9 * _waterLevel,
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: Color.fromARGB(255, 0, 201, 217),
                   borderRadius: BorderRadius.circular(5),
                 ),
               ),

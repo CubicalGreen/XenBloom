@@ -1,6 +1,7 @@
 import 'dart:async'; // Import for Timer
 import 'package:flutter/material.dart';
 import 'package:xen_bloom/authentication_screens/google_auth.dart';
+import 'package:xen_bloom/other_screens/choose_system.dart';
 import '../home_screen/home_page.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -97,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await FirebaseServices().signinWithGoogle();
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => HomePage()),
+      MaterialPageRoute(builder: (context) => ChooseSystem()),
     );
   }
 
@@ -128,35 +129,35 @@ class _LoginScreenState extends State<LoginScreen> {
               physics: NeverScrollableScrollPhysics(), // Disable manual swiping
               children: [
                 _buildPage(
-                  'assets/images/onboarding3.png',
+                  'assets/images/orboardingImage3.png',
                   'Arrange your documents',
                   'Go paper free and create longitudinal health history and share it with anyone with your consent.',
                   w,
                   h,
                 ),
                 _buildPage(
-                  'assets/images/onboarding1.png',
+                  'assets/images/onbordingImage1.png',
                   'Track Vitals',
                   'Establish unique identity across different healthcare providers in the country.',
                   w,
                   h,
                 ),
                 _buildPage(
-                  'assets/images/onboarding2.png',
+                  'assets/images/orboardingImage2.png',
                   'Enter healthcare ecosystem',
                   'Access Various UHI services to ease your medical journey and secure your data.',
                   w,
                   h,
                 ),
                 _buildPage(
-                  'assets/images/onboarding3.png',
+                  'assets/images/orboardingImage3.png',
                   'Arrange your documents',
                   'Go paper free and create longitudinal health history and share it with anyone with your consent.',
                   w,
                   h,
                 ),
                 _buildPage(
-                  'assets/images/onboarding1.png',
+                  'assets/images/onbordingImage1.png',
                   'Track Vitals',
                   'Establish unique identity across different healthcare providers in the country.',
                   w,

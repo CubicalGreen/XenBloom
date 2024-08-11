@@ -3,10 +3,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:xen_bloom/authentication_screens/firebase_options.dart';
 import 'package:xen_bloom/authentication_screens/login_page.dart';
-import 'package:xen_bloom/connect_screen.dart';
-import 'package:xen_bloom/home_screen/home_page.dart';
+import 'package:xen_bloom/other_screens/choose_system.dart';
 
-
+import 'circle_practice.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +34,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
+        scaffoldBackgroundColor: const Color(0xFFEFEFF1),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
