@@ -1,11 +1,18 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/widgets.dart';
 import 'package:xen_bloom/Elements/bottomNavBar.dart';
 import 'package:xen_bloom/Elements/customContainer.dart';
 import 'package:xen_bloom/Elements/customDrawer.dart';
 import 'package:xen_bloom/Elements/customSlider.dart';
 import 'package:xen_bloom/Elements/waterContainer.dart';
+// import 'package:xen_bloom/overlay_screen.dart';
 import 'package:xen_bloom/ph_screens/ph_screen.dart';
+import 'package:xen_bloom/ph_screens/ph_widget.dart';
+
+import '../Elements/myWidget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -171,34 +178,7 @@ class _HomePageState extends State<HomePage> {
               // Main Content
               Row(
                 children: [
-                  // Left Container
-                  Container(
-                    height: h * 0.41,
-                    width: w * 0.445,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 2,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(top: h * 0.32),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CustomSlider(
-                            value: _sliderValue,
-                            onChanged: (newValue) {
-                              setState(() {
-                                _sliderValue = newValue;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  containerWidget(),
                   SizedBox(width: w * 0.02),
                   Column(
                     children: [
@@ -224,6 +204,7 @@ class _HomePageState extends State<HomePage> {
                         title: 'pH',
                         value: '5.7',
                       ),
+                      // pHWidget(),
                     ],
                   ),
                 ],
@@ -353,3 +334,54 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+
+class CustomSlider extends StatefulWidget {
+  final double value; // Current value of the slider
+  final ValueChanged<double> onChanged; // Callback when value changes
+
+  CustomSlider({
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  _CustomSliderState createState() => _CustomSliderState();
+}
+
+class _CustomSliderState extends State<CustomSlider> {
+  late double _currentValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentValue = widget.value;
+  }
+
+  @override
+  void didUpdateWidget(CustomSlider oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != oldWidget.value) {
+      setState(() {
+        _currentValue = widget.value;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Slider(
+      activeColor: Color.fromARGB(255, 28, 215, 144),
+      value: _currentValue,
+      min: 0,
+      max: 1, // Adjust the max value as needed
+      onChanged: (newValue) {
+        setState(() {
+          _currentValue = newValue;
+        });
+        widget.onChanged(newValue); // Notify parent about the change
+      },
+    );
+  }
+}
+

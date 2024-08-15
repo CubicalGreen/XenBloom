@@ -35,7 +35,7 @@ class _CustomSliderState extends State<CustomSlider> {
   @override
   Widget build(BuildContext context) {
     return Slider(
-      activeColor:  Color.fromARGB(255,28, 215,144),
+      activeColor: Color.fromARGB(255, 28, 215, 144),
       value: _currentValue,
       min: 0,
       max: 1, // Adjust the max value as needed

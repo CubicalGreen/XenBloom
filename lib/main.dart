@@ -13,7 +13,6 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform
   );
 
-  // Call the function to get and print the FCM token
   _getFCMToken();
 
   runApp(const MyApp());

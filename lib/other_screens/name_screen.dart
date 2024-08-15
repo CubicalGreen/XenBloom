@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:xen_bloom/other_screens/choose_system.dart';
-import '../home_screen/home_page.dart';
 
 class NameScreen extends StatefulWidget {
   const NameScreen({super.key});
@@ -89,7 +88,7 @@ class _NameScreenState extends State<NameScreen> {
     bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(), // Dismiss keyboard on tap outside
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
