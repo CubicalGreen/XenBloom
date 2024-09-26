@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:xen_bloom/other_screens/choose_system.dart';
+
+import 'choose_system.dart';
 
 class NameScreen extends StatefulWidget {
   const NameScreen({super.key});
@@ -18,6 +19,7 @@ class _NameScreenState extends State<NameScreen> {
     'Herb Hollow',
     'Ivy Nook'
   };
+  
   bool isNameAvailable = true;
   String message = '';
 

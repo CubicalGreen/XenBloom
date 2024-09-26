@@ -42,6 +42,11 @@ dependencies:
   dotted_border: ^2.1.0
   flutter_launcher_icons: ^0.13.1
   sleek_circular_slider: ^2.0.1
+  cloud_firestore: ^5.4.0
+  http: ^1.2.2
+  percent_indicator: ^4.2.3
+  syncfusion_flutter_gauges: ^26.2.14
+  geekyants_flutter_gauges: ^1.0.4
 
 dev_dependencies:
   flutter_test:

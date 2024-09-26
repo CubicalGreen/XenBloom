@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:xen_bloom/Elements/customTextfield.dart';
+
+import '../Elements/customTextfield.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});

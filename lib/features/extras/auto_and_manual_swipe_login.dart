@@ -1,8 +1,7 @@
 import 'dart:async'; // Import for Timer
+
 import 'package:flutter/material.dart';
-import 'package:xen_bloom/authentication_screens/google_auth.dart';
-import 'package:xen_bloom/connect_screen.dart';
-import 'package:xen_bloom/other_screens/choose_system.dart';
+import '../authentication_screens/google_auth.dart';
 import '../home_screen/home_page.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,8 +12,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final PageController _pageController = PageController(initialPage: 1);
-  int _currentPage = 1;
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
   Timer? _timer;
 
   @override
@@ -22,11 +21,10 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     // Start the timer to automatically change pages
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
-      if (_currentPage < 3) {
+      if (_currentPage < 2) {
         _currentPage++;
       } else {
-        _currentPage = 1; // Loop back to the first actual page
-        _pageController.jumpToPage(1);
+        _currentPage = 0; // Loop back to the first page
       }
       _pageController.animateToPage(
         _currentPage,
@@ -70,9 +68,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(3, (index) {
-        bool isCurrentPage = _currentPage == index + 1;
-        bool isBeforeCurrentPage = _currentPage > index + 1;
-        bool isAfterCurrentPage = _currentPage < index + 1;
+        bool isCurrentPage = _currentPage == index;
+        bool isBeforeCurrentPage = _currentPage > index;
+        bool isAfterCurrentPage = _currentPage < index;
 
         double dotSize = isCurrentPage ? w * 0.1 : w * 0.075;
         Color dotColor = isCurrentPage
@@ -99,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await FirebaseServices().signinWithGoogle();
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => ConnectScreen()),
+      MaterialPageRoute(builder: (context) => HomePage()),
     );
   }
 
@@ -110,68 +108,43 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          Container(
-            color: Colors.white,
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: (index) {
-                if (index == 0) {
-                  _currentPage = 3;
-                  _pageController.jumpToPage(3);
-                } else if (index == 4) {
-                  _currentPage = 1;
-                  _pageController.jumpToPage(1);
-                } else {
-                  setState(() {
-                    _currentPage = index;
-                  });
-                }
-              },
-              physics: NeverScrollableScrollPhysics(), // Disable manual swiping
-              children: [
-                _buildPage(
-                  'assets/images/orboardingImage3.png',
-                  'Experience Hassle-Free Farming',
-                  'Say goodbye to the stress of traditional gardening with our fully automated, easy-to-use system.',
-                  w,
-                  h,
-                ),
-                _buildPage(
-                  'assets/images/onbordingImage1.png',
-                  'Fresh, Nutrient-Rich Produce',
-                  'Harvest your own fresh, nutrient-rich fruits and vegetables right at home.',
-                  w,
-                  h,
-                ),
-                _buildPage(
-                  'assets/images/orboardingImage2.png',
-                  'Maximize Your Space',
-                  'Grow up to 30 plants in a sleek, compact design that fits effortlessly into any indoor space.',
-                  w,
-                  h,
-                ),
-                _buildPage(
-                  'assets/images/orboardingImage3.png',
-                  'Experience Hassle-Free Farming',
-                  'Say goodbye to the stress of traditional gardening with our fully automated, easy-to-use system.',
-                  w,
-                  h,
-                ),
-                _buildPage(
-                  'assets/images/onbordingImage1.png',
-                  'Fresh, Nutrient-Rich Produce',
-                  'Harvest your own fresh, nutrient-rich fruits and vegetables right at home.',
-                  w,
-                  h,
-                ),
-              ],
-            ),
-          ),
           Padding(
             padding: EdgeInsets.only(left: w * 0.05, right: w * 0.05, top: h * 0.1, bottom: h * 0.02),
             child: Column(
               children: [
-                Spacer(),
+                Expanded(
+                  child: PageView(
+                    controller: _pageController,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentPage = index;
+                      });
+                    },
+                    children: [
+                      _buildPage(
+                        'assets/images/onboarding1.png',
+                        'Track Vitals',
+                        'Establish unique identity across different healthcare providers in the country.',
+                        w,
+                        h,
+                      ),
+                      _buildPage(
+                        'assets/images/onboarding2.png',
+                        'Enter healthcare ecosystem',
+                        'Access Various UHI services to ease your medical journey and secure your data.',
+                        w,
+                        h,
+                      ),
+                      _buildPage(
+                        'assets/images/onboarding3.png',
+                        'Arrange your documents',
+                        'Go paper free and create longitudinal health history and share it with anyone with your consent.',
+                        w,
+                        h,
+                      ),
+                    ],
+                  ),
+                ),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(

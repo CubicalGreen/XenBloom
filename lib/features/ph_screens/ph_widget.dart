@@ -338,7 +338,7 @@ class _PHScaleWidgetState extends State<PHScaleWidget> {
               ),
             ),
           ],
-        ), // Space between the pH scale and the indicator
+        ), 
       ],
     );
   }

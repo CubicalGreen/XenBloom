@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:xen_bloom/authentication_screens/google_auth.dart';
-import 'package:xen_bloom/authentication_screens/login_page.dart';
 import 'package:xen_bloom/connect_screen.dart';
-import 'package:xen_bloom/other_screens/name_screen.dart'; // Ensure this import for FirebaseServices
+
+import '../authentication_screens/google_auth.dart';
+import '../authentication_screens/modified_login.dart';
+import '../other_screens/name_screen.dart';
 
 class CustomDrawer extends StatelessWidget {
   @override
@@ -15,7 +16,7 @@ class CustomDrawer extends StatelessWidget {
       await FirebaseServices().googleSignOut(); // Ensure this method exists in your FirebaseServices
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginScreen()), // Replace with your login screen or initial route
+        MaterialPageRoute(builder: (context) => mLoginScreen()), // Replace with your login screen or initial route
       );
     }
 

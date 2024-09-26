@@ -1,11 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:xen_bloom/authentication_screens/firebase_options.dart';
-import 'package:xen_bloom/authentication_screens/login_page.dart';
-import 'package:xen_bloom/other_screens/choose_system.dart';
+import 'package:xen_bloom/firebase_options.dart';
 
-import 'circle_practice.dart';
+import 'features/authentication_screens/modified_login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +35,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: LoginScreen(),
+      home: mLoginScreen(),
     );
   }
 }

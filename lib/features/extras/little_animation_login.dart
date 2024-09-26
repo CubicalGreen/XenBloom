@@ -1,7 +1,6 @@
 import 'dart:async'; // Import for Timer
-
 import 'package:flutter/material.dart';
-import 'package:xen_bloom/authentication_screens/google_auth.dart';
+import '../authentication_screens/google_auth.dart';
 import '../home_screen/home_page.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -15,22 +14,29 @@ class _LoginScreenState extends State<LoginScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   Timer? _timer;
+  bool _isTransitioning = false;
 
   @override
   void initState() {
     super.initState();
     // Start the timer to automatically change pages
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
-      if (_currentPage < 2) {
-        _currentPage++;
-      } else {
-        _currentPage = 0; // Loop back to the first page
-      }
-      _pageController.animateToPage(
-        _currentPage,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+      setState(() {
+        _isTransitioning = true;
+      });
+
+      Future.delayed(Duration(milliseconds: 300), () {
+        _pageController.animateToPage(
+          (_currentPage + 1) % 3,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        ).then((_) {
+          setState(() {
+            _currentPage = (_currentPage + 1) % 3;
+            _isTransitioning = false;
+          });
+        });
+      });
     });
   }
 
@@ -69,14 +75,10 @@ class _LoginScreenState extends State<LoginScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(3, (index) {
         bool isCurrentPage = _currentPage == index;
-        bool isBeforeCurrentPage = _currentPage > index;
-        bool isAfterCurrentPage = _currentPage < index;
 
         double dotSize = isCurrentPage ? w * 0.1 : w * 0.075;
         Color dotColor = isCurrentPage
             ? Colors.black
-            : isBeforeCurrentPage
-            ? Colors.grey.shade500
             : Colors.grey.shade300;
 
         return AnimatedContainer(
@@ -115,11 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Expanded(
                   child: PageView(
                     controller: _pageController,
-                    onPageChanged: (index) {
-                      setState(() {
-                        _currentPage = index;
-                      });
-                    },
+                    physics: NeverScrollableScrollPhysics(), // Disable manual swiping
                     children: [
                       _buildPage(
                         'assets/images/onboarding1.png',
@@ -171,9 +169,17 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
           ),
+          // White overlay for transition effect
+          AnimatedOpacity(
+            opacity: _isTransitioning ? 1.0 : 0.0,
+            duration: Duration(milliseconds: 300),
+            child: Container(
+              color: Colors.white,
+            ),
+          ),
           Positioned(
             top: h * 0.03,
-            right: w * 0.05,
+            right: w * 0.05,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
             child: Image.asset(
               'assets/images/language_option.png',
               height: h * 0.08,

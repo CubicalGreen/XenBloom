@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:xen_bloom/Elements/customTextfield.dart';
-import 'package:xen_bloom/other_screens/choose_system.dart';
 
-import 'other_screens/name_screen.dart';
+import 'features/Elements/customTextfield.dart';
+import 'features/other_screens/name_screen.dart';
 
 class ConnectScreen extends StatefulWidget {
   const ConnectScreen({super.key});

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:xen_bloom/home_screen/home_page.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart'; // Commented out for now
+import 'package:xen_bloom/features/home_screen/home_page.dart';
 
 class ChooseSystem extends StatefulWidget {
   @override
@@ -34,18 +33,6 @@ class _ChooseSystemState extends State<ChooseSystem> {
       print("Error fetching user data: $e");
     }
   }
-
-  // Commented out for now
-  // void _fetchSystems() async {
-  //   final systemsSnapshot = await FirebaseFirestore.instance
-  //       .collection('systems')  // Ensure the collection name matches
-  //       .where('userId', isEqualTo: _user!.uid) // Assuming you store userId in the systems collection
-  //       .get();
-
-  //   setState(() {
-  //     _systems = systemsSnapshot.docs.map((doc) => doc['name'].toString()).toList();
-  //   });
-  // }
 
   Widget _buildSystemCard(String systemName) {
     return Card(

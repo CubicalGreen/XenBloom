@@ -1,18 +1,13 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:flutter/widgets.dart';
-import 'package:xen_bloom/Elements/bottomNavBar.dart';
-import 'package:xen_bloom/Elements/customContainer.dart';
-import 'package:xen_bloom/Elements/customDrawer.dart';
-import 'package:xen_bloom/Elements/customSlider.dart';
-import 'package:xen_bloom/Elements/waterContainer.dart';
-// import 'package:xen_bloom/overlay_screen.dart';
-import 'package:xen_bloom/ph_screens/ph_screen.dart';
-import 'package:xen_bloom/ph_screens/ph_widget.dart';
-
+import 'package:xen_bloom/features/time_screens/time_update.dart';
+import '../Elements/bottomNavBar.dart';
+import '../Elements/customContainer.dart';
+import '../Elements/customDrawer.dart';
 import '../Elements/myWidget.dart';
+import '../Elements/waterContainer.dart';
+import '../ph_screens/ph_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -135,45 +130,47 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(height: h * 0.01),
               // Header: Next Cycle Countdown
-              Container(
-                height: h * 0.17,
-                padding: EdgeInsets.only(
-                    top: h * 0.068, left: w * 0.04, right: w * 0.04),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Next Cycle in',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Text(
-                            '28:42',
-                            style: TextStyle(fontSize: 35),
-                          ),
-                          SizedBox(width: 4),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Text(
-                              'mins',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              // Container(
+              //   height: h * 0.17,
+              //   padding: EdgeInsets.only(
+              //       top: h * 0.068, left: w * 0.04, right: w * 0.04),
+              //   decoration: BoxDecoration(
+              //     color: Colors.white,
+              //     borderRadius: BorderRadius.circular(10),
+              //   ),
+              //   child: Align(
+              //     alignment: Alignment.bottomLeft,
+              //     child: Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Text(
+              //           'Next Cycle in',
+              //           style: TextStyle(fontSize: 20),
+              //         ),
+              //         Row(
+              //           crossAxisAlignment: CrossAxisAlignment.baseline,
+              //           textBaseline: TextBaseline.alphabetic,
+              //           children: [
+              //             Text(
+              //               '28:42',
+              //               style: TextStyle(fontSize: 35),
+              //             ),
+              //             SizedBox(width: 4),
+              //             Align(
+              //               alignment: Alignment.bottomCenter,
+              //               child: Text(
+              //                 'mins',
+              //                 style: TextStyle(fontSize: 20),
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+                
+              // ),
+              timeUpdateWidget(),
               SizedBox(height: h * 0.007),
               // Main Content
               Row(
@@ -191,20 +188,7 @@ class _HomePageState extends State<HomePage> {
                         unit: 'ppm',
                       ),
                       SizedBox(height: h * 0.01),
-                      CustomContainer(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => pHScreen()), // Navigate to the ConnectScreen
-                          );
-                        },
-                        height: h * 0.2,
-                        width: w * 0.445,
-                        imagePath: 'assets/images/pH.png',
-                        title: 'pH',
-                        value: '5.7',
-                      ),
-                      // pHWidget(),
+                      pHWidget(),
                     ],
                   ),
                 ],
