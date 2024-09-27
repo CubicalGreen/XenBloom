@@ -40,7 +40,6 @@ exports.sendNotification= async (token, message) => {
 exports.addUpdateLog = async (log) => {
   try {
     //await logSchema.validate(log);
-    log.timestamp=new Date();
     // Add the log to the update_log collection in Firestore
     await firestore.collection('update_log').add(log);
     console.log('Log added successfully');
@@ -59,8 +58,6 @@ exports.addUpdateLog = async (log) => {
  */
 exports.addUser = async (user) => {
   try {
-    // Validate the user object against the user schema
-    await userSchema.validate(user);
     // Add the user to the users collection in Firestore
     await firestore.collection('users').add(user);
     console.log('User added successfully');
@@ -77,12 +74,12 @@ exports.addUser = async (user) => {
  * @returns {Promise<void>} - A promise that resolves when the device is added.
  * @throws {Error} - Throws an error if the device validation fails.
  */
-exports.addDevice = async (device) => {
+exports.addDevice = async (device, deviceId) => {
   try {
     // Validate the device object against the device schema
     await deviceSchema.validate(device);
      // Add the device to the devices collection in Firestore
-    await firestore.collection('devices').add(device);
+    await firestore.collection('devices').doc(deviceId).set(device);
     console.log('Device added successfully');
   } catch (error) {
      // Log validation error if it occurs
@@ -106,3 +103,31 @@ exports.addSettings= async (data)=>{
   // Log error if adding settings fails
   console.error('Device validation failed:', error);
 }};
+
+
+exports.addSchedule= async(schedule)=> {
+  try {
+    const { taskName, scheduledTime, action, deviceId } = schedule;
+
+    // Validate input
+    if (!taskName || !scheduledTime || !action || !deviceId) {
+      return res.status(400).json({ message: 'taskName scheduledTime and action are required.' });
+    }
+
+    // Validate time format HH:mm
+    if (!/^\d{2}:\d{2}$/.test(scheduledTime)) {
+      return res.status(400).json({ message: 'scheduledTime must be in HH:mm format.' });
+    }
+    // Add the schedule data to the settings collection in Firestore
+    await firestore.collection('schedules').add({
+      deviceId: deviceId,
+      taskName: taskName,
+      scheduledTime: scheduledTime,
+      action: action,
+      status: false
+    });
+    res.status(201).json({ message: 'Schedule added successfully.' });
+  } catch (error) {
+    console.error('Error adding schedule:', error);
+    res.status(500).json({ message: 'Failed to add schedule.', error: error.message });
+  }};
