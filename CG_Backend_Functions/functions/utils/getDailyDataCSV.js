@@ -1,5 +1,5 @@
 const { Parser } = require("json2csv");
-const fs = require("fs");
+const axios = require("axios");
 
 /**
  * Generates a CSV file from the provided data and saves it with today's date as the filename.
@@ -27,7 +27,6 @@ exports.getCSV = async (data, today) => {
   const flattenedData = data.flatMap((item) =>
     item.dailydata.map((daily) => ({
       deviceId: item.deviceId,
-      EC: daily.EC,
       TDS: daily.TDS,
       pH: daily.pH,
       timestamp: daily.timestamp,
@@ -36,7 +35,7 @@ exports.getCSV = async (data, today) => {
   );
 
   // Define fields for CSV
-  const fields = ["deviceId", "EC", "TDS", "pH", "timestamp", "waterLevel"];
+  const fields = ["deviceId", "TDS", "pH", "timestamp", "waterLevel"];
   const opts = { fields };
 
   try {
@@ -48,14 +47,27 @@ exports.getCSV = async (data, today) => {
     const formattedDate = today.toISOString().split("T")[0];
     const fileName = `${formattedDate}.csv`;
 
-    // Write the CSV to a file
-    fs.writeFile(fileName, csv, (err) => {
-      if (err) {
-        console.error("Error saving CSV file:", err);
-      } else {
-        console.log("CSV file saved successfully!");
-      }
+    // Encode the CSV data in base64 (required by GitHub API)
+    const base64Content = Buffer.from(csv).toString('base64');
+
+    const payload = JSON.stringify({
+      message: `Add CSV file for ${formattedDate}`, // Commit message
+      content: base64Content, // Base64 encoded content
     });
+
+    const config = {
+      method: "put",
+      url: `https://api.github.com/repos/${process.env.REPO_OWNER}/${process.env.REPO_NAME}/contents/${fileName}`,
+      headers: {
+        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      data: payload,
+    };
+
+    const response = await axios(config);
+    console.log("File successfully uploaded:", response.data.content.html_url);
+
   } catch (err) {
     console.error("Error converting JSON to CSV:", err);
   }
