@@ -1,4 +1,5 @@
-const functions = require("firebase-functions");
+const { onRequest } = require("firebase-functions/v2/https");
+const { onSchedule } = require("firebase-functions/v2/scheduler");
 const {
   getDeviceData,
   addSensorData,
@@ -6,37 +7,62 @@ const {
   changeDeviceRange,
   getSettings,
   addDevice,
+  addSchedule,
+  addUser,
+  executeScheduledTasks,
+  incPump,
+  lightStatus
 } = require("./controllers/serverController");
 const { sendAlert } = require("./controllers/notificationController");
 
-exports.getDeviceData = functions.https.onRequest(async (req, res) => {
+exports.getDeviceData = onRequest(async (req, res) => {
   await getDeviceData(req, res);
 });
 
-exports.addSensorData = functions.https.onRequest(async (req, res) => {
+exports.lightStatus = onRequest(async (req, res) => {
+  await lightStatus(req, res);
+});
+
+exports.addSchedule = onRequest(async (req, res) => {
+  await addSchedule(req, res);
+});
+
+exports.executeScheduledTasks = onSchedule("every 5 minutes", (context) => {
+  return executeScheduledTasks();
+});
+
+exports.addUser = onRequest(async (req, res) => {
+  await addUser(req, res);
+});
+
+exports.addSensorData = onRequest(async (req, res) => {
   await addSensorData(req, res);
 });
 
-exports.changeDefault = functions.https.onRequest(async (req, res) => {
+exports.changeDefault = onRequest(async (req, res) => {
   await changeDefault(req, res);
 });
 
-exports.changeDeviceRange = functions.https.onRequest(async (req, res) => {
+exports.changeDeviceRange = onRequest(async (req, res) => {
   await changeDeviceRange(req, res);
 });
 
-exports.getSettings = functions.https.onRequest(async (req, res) => {
+exports.getSettings = onRequest(async (req, res) => {
   await getSettings(req, res);
 });
 
-exports.addDevice = functions.https.onRequest(async (req, res) => {
+exports.incPump = onRequest(async (req, res) => {
+  await incPump(req, res);
+});
+
+exports.addDevice = onRequest(async (req, res) => {
   await addDevice(req, res);
 });
 
-exports.sendAlert = functions.https.onRequest(async (req, res) => {
+exports.sendAlert = onRequest(async (req, res) => {
   await sendAlert(req, res);
 });
 
-exports.scheduledProcessDailyData = functions.pubsub.schedule('55 23 * * *').onRun((context) => {
-    return processDailyData();
-  });
+exports.scheduledProcessDailyData = onSchedule("25 18 * * *", (context) => {
+  return processDailyData();
+});
