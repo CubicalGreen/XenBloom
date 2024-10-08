@@ -231,6 +231,7 @@ exports.addSchedule = async (req, res) => {
 };
 
 exports.addUser = async (req, res) => {
+  console.log(req);
   const user = req.body; // New user data from request body
   if (!user) {
     return res.status(400).json({ Error: "Invalid Request" });
