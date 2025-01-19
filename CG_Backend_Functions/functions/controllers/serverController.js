@@ -140,7 +140,7 @@ exports.changeDeviceRange = async (req, res) => {
     }
   } catch (error) {
     console.error("Error updating Ranges:", error);
-    res.status(500).json({ error: "Error updating Ranges:" , message: error});
+    res.status(500).json({ error: `Error updating Ranges: ${error.message}`});
   }
 };
 
