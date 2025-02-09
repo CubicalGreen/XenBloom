@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:xen_bloom/features/home_screen/home_page.dart';
+import '../apis/get_devices_list.dart';
+import '../authentication_screens/globalVariable.dart';
 
 class ChooseSystem extends StatefulWidget {
   @override
@@ -11,13 +15,43 @@ class _ChooseSystemState extends State<ChooseSystem> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? _user;
   String? _firstName;
-  // List<String> _systems = []; // Commented out for now
+  List<String> devices = [];
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _fetchUserData();
-    // _fetchSystems(); // Commented out for now
+    fetchDevices();
+  }
+
+  void fetchDevices() async {
+    try {
+      String? userUid = globalUid;
+      String? documentId = await getDocumentNameByUserId(userUid);
+      globalDocumentId = documentId;
+
+      if (documentId != null) {
+        List<String> devicesList = await getDevicesField(documentId);
+
+        setState(() {
+          devices = devicesList;
+          isLoading = false;
+        });
+
+        print("Devices: $devicesList");
+      } else {
+        print("Document ID not found for the given UID.");
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Error fetching devices: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   void _fetchUserData() async {
@@ -29,8 +63,87 @@ class _ChooseSystemState extends State<ChooseSystem> {
         });
       }
     } catch (e) {
-      // Handle error (e.g., show a SnackBar or log the error)
       print("Error fetching user data: $e");
+    }
+  }
+
+  Future<void> _deleteDevice(String deviceName) async {
+    try {
+      String? documentId = globalDocumentId;
+      if (documentId == null) {
+        print("Global document ID is null.");
+        return;
+      }
+
+      DocumentReference userDocRef =
+          FirebaseFirestore.instance.collection('users').doc(documentId);
+
+      // Get the current devices array
+      DocumentSnapshot snapshot = await userDocRef.get();
+      if (!snapshot.exists) {
+        print("User document does not exist.");
+        return;
+      }
+
+      List<dynamic> devicesList = snapshot.get('devices') ?? [];
+
+      // Find the device object to remove
+      Map<String, dynamic>? deviceToRemove;
+      for (var device in devicesList) {
+        if (device['name'] == deviceName) {
+          deviceToRemove = device as Map<String, dynamic>;
+          break;
+        }
+      }
+
+      if (deviceToRemove == null) {
+        print("Device not found in Firestore.");
+        return;
+      }
+
+      // Remove the found device object from the array
+      await userDocRef.update({
+        'devices': FieldValue.arrayRemove([deviceToRemove]),
+      });
+
+      print("Device deleted successfully");
+
+      // Refresh the UI by removing the device locally
+      setState(() {
+        devices.remove(deviceName);
+      });
+    } catch (e) {
+      print("Error occurred while deleting device: $e");
+    }
+  }
+
+  void _onDeviceCardTapped(String deviceName) async {
+    try {
+      String? documentId = globalDocumentId;
+      if (documentId == null) {
+        print("Global document ID is null.");
+        return;
+      }
+
+      String? fetchedDeviceId = await getDeviceIdByName(documentId, deviceName);
+      if (fetchedDeviceId != null) {
+        setState(() {
+          globalDeviceId = fetchedDeviceId;
+        });
+
+        print("Device ID for $deviceName: $globalDeviceId");
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ),
+        );
+      } else {
+        print("No device ID found for the device: $deviceName.");
+      }
+    } catch (e) {
+      print("Error occurred while fetching device ID: $e");
     }
   }
 
@@ -40,19 +153,32 @@ class _ChooseSystemState extends State<ChooseSystem> {
         borderRadius: BorderRadius.circular(12),
       ),
       color: Color(0xFFF9FBFA),
-      elevation: 0, // Remove elevation
+      elevation: 0, // No shadow effect
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              InkWell(
-                onTap: () {},
-                child: Image.asset(
-                  'assets/images/dot_icon.png', // Replace with your image path
-                  width: MediaQuery.of(context).size.width * 0.07,
-                  color: Colors.grey[500], // Apply the same color as the icon
+              SizedBox(), // Empty space for alignment
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  if (value == 'delete') {
+                    _deleteDevice(systemName);
+                  }
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: Text(
+                      "Delete Device",
+                      style: GoogleFonts.poppins(),
+                    ),
+                  ),
+                ],
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(Icons.more_vert, color: Colors.grey[500]),
                 ),
               ),
             ],
@@ -60,11 +186,14 @@ class _ChooseSystemState extends State<ChooseSystem> {
           SizedBox(height: MediaQuery.of(context).size.height * 0.0075),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(
-              systemName,
-              style: TextStyle(
-                fontSize: MediaQuery.of(context).size.width * 0.07,
-                color: Colors.grey[500],
+            child: GestureDetector(
+              onTap: () => _onDeviceCardTapped(systemName),
+              child: Text(
+                systemName,
+                style: GoogleFonts.poppins(
+                  fontSize: MediaQuery.of(context).size.width * 0.07,
+                  color: Colors.grey[500],
+                ),
               ),
             ),
           ),
@@ -81,51 +210,33 @@ class _ChooseSystemState extends State<ChooseSystem> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.only(bottom: 16.0, top: 60, right: 16, left: 16), // Reduced top padding
+        padding:
+            const EdgeInsets.only(bottom: 16.0, top: 60, right: 16, left: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Hiii,',
-              style: TextStyle(
+              'Hii,',
+              style: GoogleFonts.poppins(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
             ),
             Text(
-              _firstName ?? '', // Handle null value for _firstName
-              style: TextStyle(
+              _firstName ?? '',
+              style: GoogleFonts.poppins(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
             ),
             Expanded(
-              child: ListView(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomePage(), // Navigate to HomePage widget
-                        ),
-                      );
-                    },
-                    child: _buildSystemCard('Gardenia'),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomePage(), // Navigate to HomePage widget
-                        ),
-                      );
-                    },
-                    child: _buildSystemCard('Green Oasis'),
-                  ),
-                ],
-              ),
+              child: isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : ListView(
+                      children: [
+                        ...devices.map((device) => _buildSystemCard(device)),
+                      ],
+                    ),
             ),
           ],
         ),

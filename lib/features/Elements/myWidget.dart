@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
+import 'package:google_fonts/google_fonts.dart';
+
 class containerWidget extends StatefulWidget {
   @override
   _containerWidgetState createState() => _containerWidgetState();
@@ -22,18 +24,24 @@ class _containerWidgetState extends State<containerWidget> {
             // The grey and blurry background that covers the entire screen
             Positioned.fill(
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0), // Apply blur effect
+                filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
+                // Apply blur effect
                 child: Container(
-                  color: Color(0xFF494e52).withOpacity(0.5), // Grey color with opacity
+                  color: Color(0xFF494e52)
+                      .withOpacity(0.5), // Grey color with opacity
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top:35.0,right: 8),
+              padding: const EdgeInsets.only(top: 35.0, right: 8),
               child: Align(
                 alignment: Alignment.topRight,
                 child: IconButton(
-                  icon: Icon(Icons.arrow_drop_down_circle_outlined, color: Colors.white,size: 30,), // Down arrow icon
+                  icon: Icon(
+                    Icons.arrow_drop_down_circle_outlined,
+                    color: Colors.white,
+                    size: 30,
+                  ), // Down arrow icon
                   onPressed: () {
                     Navigator.pop(context); // Close the bottom sheet
                   },
@@ -44,16 +52,19 @@ class _containerWidgetState extends State<containerWidget> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.36, // Reduced height of the bottom sheet
+                height: MediaQuery.of(context).size.height *
+                    0.36, // Reduced height of the bottom sheet
                 child: Column(
                   children: <Widget>[
                     Expanded(
                       child: Column(
                         children: [
                           Align(
-                            alignment: Alignment.centerLeft, // Align the text to the left
+                            alignment: Alignment.centerLeft,
+                            // Align the text to the left
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 20.0), // Add padding to keep it away from the edge
+                              padding: const EdgeInsets.only(left: 20.0),
+                              // Add padding to keep it away from the edge
                               child: Text(
                                 'Grow Lights',
                                 style: TextStyle(color: Colors.white),
@@ -61,33 +72,51 @@ class _containerWidgetState extends State<containerWidget> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8),
+                            padding: const EdgeInsets.only(
+                                left: 8.0, right: 8.0, top: 8),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 // Card 1
                                 Container(
-                                  height: MediaQuery.of(context).size.height * 0.12,
-                                  width: MediaQuery.of(context).size.width * 0.45,
-                                  padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.12,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.45,
+                                  padding: EdgeInsets.all(
+                                      MediaQuery.of(context).size.width * 0.03),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.03),
+                                    borderRadius: BorderRadius.circular(
+                                        MediaQuery.of(context).size.width *
+                                            0.03),
                                   ),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                         children: [
-                                          Icon(Icons.sunny, color: Colors.grey,),
+                                          Icon(
+                                            Icons.sunny,
+                                            color: Colors.grey,
+                                          ),
                                         ],
                                       ),
-                                      SizedBox(height: MediaQuery.of(context).size.height * 0.0075),
+                                      SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.0075),
                                       Text(
                                         '06:00',
                                         style: TextStyle(
-                                          fontSize: MediaQuery.of(context).size.width * 0.08,
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.08,
                                           color: Colors.grey[800],
                                         ),
                                       ),
@@ -96,27 +125,44 @@ class _containerWidgetState extends State<containerWidget> {
                                 ),
                                 // Card 2
                                 Container(
-                                  height: MediaQuery.of(context).size.height * 0.12,
-                                  width: MediaQuery.of(context).size.width * 0.45,
-                                  padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.12,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.45,
+                                  padding: EdgeInsets.all(
+                                      MediaQuery.of(context).size.width * 0.03),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.03),
+                                    borderRadius: BorderRadius.circular(
+                                        MediaQuery.of(context).size.width *
+                                            0.03),
                                   ),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                         children: [
-                                          Icon(Icons.nights_stay_outlined, color: Colors.grey,),
+                                          Icon(
+                                            Icons.nights_stay_outlined,
+                                            color: Colors.grey,
+                                          ),
                                         ],
                                       ),
-                                      SizedBox(height: MediaQuery.of(context).size.height * 0.0075),
+                                      SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.0075),
                                       Text(
                                         '18:00',
                                         style: TextStyle(
-                                          fontSize: MediaQuery.of(context).size.width * 0.08,
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.08,
                                           color: Colors.grey[800],
                                         ),
                                       ),
@@ -128,50 +174,68 @@ class _containerWidgetState extends State<containerWidget> {
                           ),
                           SizedBox(height: 6),
                           Padding(
-                            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                            padding:
+                                const EdgeInsets.only(left: 16.0, right: 16.0),
                             child: Container(
                               height: MediaQuery.of(context).size.height * 0.12,
-                              padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
+                              padding: EdgeInsets.all(
+                                  MediaQuery.of(context).size.width * 0.03),
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.03),
+                                borderRadius: BorderRadius.circular(
+                                    MediaQuery.of(context).size.width * 0.03),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         'Total',
                                         style: TextStyle(
-                                          fontSize: MediaQuery.of(context).size.width * 0.05,
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.05,
                                           color: Colors.grey[600],
                                         ),
                                       ),
                                       Container(
-                                        padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                                        padding: EdgeInsets.only(
+                                            left: 8.0, right: 8.0),
                                         decoration: BoxDecoration(
                                           color: Color(0xFF9cfca6),
-                                          borderRadius: BorderRadius.circular(20.0),
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
                                         ),
                                         child: Text(
                                           'Recommended',
                                           style: TextStyle(
-                                            fontSize: MediaQuery.of(context).size.width * 0.05,
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.05,
                                             color: Colors.black,
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: MediaQuery.of(context).size.height * 0.0075),
+                                  SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.0075),
                                   Row(
                                     children: [
                                       Text(
                                         '14:00',
                                         style: TextStyle(
-                                          fontSize: MediaQuery.of(context).size.width * 0.08,
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.08,
                                           color: Colors.grey[800],
                                         ),
                                       ),
@@ -180,11 +244,21 @@ class _containerWidgetState extends State<containerWidget> {
                                           children: [
                                             WidgetSpan(
                                               child: Transform.translate(
-                                                offset: Offset(0, MediaQuery.of(context).size.width * 0.01), // Adjust the offset for subscript effect
+                                                offset: Offset(
+                                                    0,
+                                                    MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.01),
+                                                // Adjust the offset for subscript effect
                                                 child: Text(
                                                   ' Hrs', // Subscript text
                                                   style: TextStyle(
-                                                    fontSize: MediaQuery.of(context).size.width * 0.04,
+                                                    fontSize:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.04,
                                                     color: Colors.grey[800],
                                                   ),
                                                 ),
@@ -201,7 +275,8 @@ class _containerWidgetState extends State<containerWidget> {
                           ),
                           SizedBox(height: 6),
                           Padding(
-                            padding: const EdgeInsets.only(right: 16.0,left: 16),
+                            padding:
+                                const EdgeInsets.only(right: 16.0, left: 16),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -210,13 +285,19 @@ class _containerWidgetState extends State<containerWidget> {
                                     // Handle Cancel button press
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white, // Button color
-                                    minimumSize: Size(MediaQuery.of(context).size.width * 0.44, 50), // Increase size
+                                    backgroundColor: Colors.white,
+                                    // Button color
+                                    minimumSize: Size(
+                                        MediaQuery.of(context).size.width *
+                                            0.44,
+                                        50),
+                                    // Increase size
                                     textStyle: TextStyle(
                                       fontSize: 18, // Increase text size
                                     ),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8), // Reduced border radius
+                                      borderRadius: BorderRadius.circular(
+                                          8), // Reduced border radius
                                     ),
                                   ),
                                   child: Text(
@@ -224,19 +305,27 @@ class _containerWidgetState extends State<containerWidget> {
                                     style: TextStyle(color: Colors.black),
                                   ),
                                 ),
-                                SizedBox(width: 5,),
+                                SizedBox(
+                                  width: 5,
+                                ),
                                 ElevatedButton(
                                   onPressed: () {
                                     _showSecondBottomSheet(); // Show the second bottom sheet
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.black, // Button color
-                                    minimumSize: Size(MediaQuery.of(context).size.width * 0.44, 50), // Increase size
+                                    backgroundColor: Colors.black,
+                                    // Button color
+                                    minimumSize: Size(
+                                        MediaQuery.of(context).size.width *
+                                            0.44,
+                                        50),
+                                    // Increase size
                                     textStyle: TextStyle(
                                       fontSize: 18, // Increase text size
                                     ),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8), // Reduced border radius
+                                      borderRadius: BorderRadius.circular(
+                                          8), // Reduced border radius
                                     ),
                                   ),
                                   child: Text(
@@ -260,18 +349,12 @@ class _containerWidgetState extends State<containerWidget> {
     );
   }
 
-
-
-
-
-
-
   Widget _buildTimeSelector(List<String> times, bool isStart) {
     String selectedTime = isStart ? _selectedStartTime : _selectedEndTime;
 
     return SizedBox(
       height: 250, // Height to show five items at a time
-      width: 150,  // Fixed width
+      width: 150, // Fixed width
       child: ListWheelScrollView(
         itemExtent: 50,
         physics: FixedExtentScrollPhysics(),
@@ -293,7 +376,8 @@ class _containerWidgetState extends State<containerWidget> {
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.black, // All text is black
-                fontWeight: time == selectedTime ? FontWeight.bold : FontWeight.normal,
+                fontWeight:
+                    time == selectedTime ? FontWeight.bold : FontWeight.normal,
               ),
             ),
           );
@@ -301,10 +385,6 @@ class _containerWidgetState extends State<containerWidget> {
       ),
     );
   }
-
-
-
-
 
   void _showSecondBottomSheet() {
     showModalBottomSheet(
@@ -317,9 +397,11 @@ class _containerWidgetState extends State<containerWidget> {
             // The grey and blurry background that covers the entire screen
             Positioned.fill(
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0), // Apply blur effect
+                filter: ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
+                // Apply blur effect
                 child: Container(
-                  color: Color(0xFF494e52).withOpacity(0.5), // Grey color with opacity
+                  color: Color(0xFF494e52)
+                      .withOpacity(0.5), // Grey color with opacity
                 ),
               ),
             ),
@@ -328,7 +410,8 @@ class _containerWidgetState extends State<containerWidget> {
               child: Align(
                 alignment: Alignment.topRight,
                 child: IconButton(
-                  icon: Icon(Icons.arrow_drop_down_circle_outlined, color: Colors.white, size: 30), // Down arrow icon
+                  icon: Icon(Icons.arrow_drop_down_circle_outlined,
+                      color: Colors.white, size: 30), // Down arrow icon
                   onPressed: () {
                     Navigator.pop(context); // Close the bottom sheet
                   },
@@ -338,16 +421,19 @@ class _containerWidgetState extends State<containerWidget> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.52, // Adjusted height
+                height: MediaQuery.of(context).size.height *
+                    0.52, // Adjusted height
                 child: Padding(
                   padding: const EdgeInsets.only(left: 14.0, right: 14),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Align(
-                        alignment: Alignment.centerLeft, // Align the text to the left
+                        alignment: Alignment.centerLeft,
+                        // Align the text to the left
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 20.0), // Add padding to keep it away from the edge
+                          padding: const EdgeInsets.only(left: 20.0),
+                          // Add padding to keep it away from the edge
                           child: Text(
                             'Grow Lights',
                             style: TextStyle(color: Colors.white, fontSize: 16),
@@ -359,17 +445,17 @@ class _containerWidgetState extends State<containerWidget> {
                         padding: const EdgeInsets.only(top: 10.0),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(20.0), // Circular border
+                          borderRadius:
+                              BorderRadius.circular(20.0), // Circular border
                         ),
                         child: Column(
                           children: [
                             Text(
                               '10:00-18:00',
-                              style: TextStyle(
+                              style: GoogleFonts.poppins(
                                   fontSize: 20,
                                   color: Colors.black,
-                                  fontWeight: FontWeight.bold
-                              ),
+                                  fontWeight: FontWeight.bold),
                             ),
                             SizedBox(height: 16),
                             Row(
@@ -394,16 +480,20 @@ class _containerWidgetState extends State<containerWidget> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.of(context).pop(); // Close the bottom sheet
+                              Navigator.of(context)
+                                  .pop(); // Close the bottom sheet
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white, // Button color
-                              minimumSize: Size(MediaQuery.of(context).size.width * 0.44, 50), // Button size
+                              minimumSize: Size(
+                                  MediaQuery.of(context).size.width * 0.44,
+                                  50), // Button size
                               textStyle: TextStyle(
                                 fontSize: 18, // Text size
                               ),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8), // Border radius
+                                borderRadius:
+                                    BorderRadius.circular(8), // Border radius
                               ),
                             ),
                             child: Text(
@@ -414,16 +504,20 @@ class _containerWidgetState extends State<containerWidget> {
                           ElevatedButton(
                             onPressed: () {
                               // Handle save action
-                              Navigator.of(context).pop(); // Close the bottom sheet
+                              Navigator.of(context)
+                                  .pop(); // Close the bottom sheet
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.black, // Button color
-                              minimumSize: Size(MediaQuery.of(context).size.width * 0.44, 50), // Button size
+                              minimumSize: Size(
+                                  MediaQuery.of(context).size.width * 0.44,
+                                  50), // Button size
                               textStyle: TextStyle(
                                 fontSize: 18, // Text size
                               ),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8), // Border radius
+                                borderRadius:
+                                    BorderRadius.circular(8), // Border radius
                               ),
                             ),
                             child: Text(
@@ -444,18 +538,17 @@ class _containerWidgetState extends State<containerWidget> {
     );
   }
 
-
   List<String> _getStartTimeList() {
-    return List.generate(13, (index) => index.toString().padLeft(2, '0') + ':00');
+    return List.generate(
+        13, (index) => index.toString().padLeft(2, '0') + ':00');
   }
 
-
   List<String> _getEndTimeList() {
-    List<String> endTimeList = List.generate(12, (index) => (index + 12).toString().padLeft(2, '0') + ':00');
+    List<String> endTimeList = List.generate(
+        12, (index) => (index + 12).toString().padLeft(2, '0') + ':00');
     endTimeList.add('24:00');
     return endTimeList;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -514,7 +607,6 @@ class CustomSlider extends StatelessWidget {
   }
 }
 
-
 class TimeSelector extends StatefulWidget {
   final List<String> times;
   final bool isStart;
@@ -540,7 +632,7 @@ class _TimeSelectorState extends State<TimeSelector> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 250, // Height to show five items at a time
-      width: 150,  // Fixed width
+      width: 150, // Fixed width
       child: ListWheelScrollView(
         itemExtent: 50,
         physics: FixedExtentScrollPhysics(),
@@ -558,26 +650,32 @@ class _TimeSelectorState extends State<TimeSelector> {
           return Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: time == _selectedTime ? Colors.black : Colors.white, // Change background color
-              borderRadius: time == _selectedTime ? BorderRadius.circular(25) : BorderRadius.zero, // Apply circular border only to the selected container
-              border: time == _selectedTime ? Border.all(
-                color: Colors.black, // Border color
-                width: 2, // Border width
-              ) : null, // No border for non-selected containers
+              color: time == _selectedTime ? Colors.black : Colors.white,
+              // Change background color
+              borderRadius: time == _selectedTime
+                  ? BorderRadius.circular(25)
+                  : BorderRadius.zero,
+              // Apply circular border only to the selected container
+              border: time == _selectedTime
+                  ? Border.all(
+                      color: Colors.black, // Border color
+                      width: 2, // Border width
+                    )
+                  : null, // No border for non-selected containers
             ),
             child: Text(
               time,
               style: TextStyle(
                 fontSize: 18,
-                color: time == _selectedTime ? Colors.white : Colors.black, // Change text color
-                fontWeight: time == _selectedTime ? FontWeight.bold : FontWeight.normal,
+                color: time == _selectedTime ? Colors.white : Colors.black,
+                // Change text color
+                fontWeight:
+                    time == _selectedTime ? FontWeight.bold : FontWeight.normal,
               ),
             ),
           );
-
         }).toList(),
       ),
     );
   }
 }
-

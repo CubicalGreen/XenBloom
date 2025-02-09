@@ -1,7 +1,12 @@
 import 'dart:math';
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'dart:ui';
+import '../authentication_screens/globalVariable.dart';
+import 'package:xen_bloom/features/time_screens/drag_timer.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 class timeUpdateWidget extends StatefulWidget {
   const timeUpdateWidget({super.key});
@@ -11,7 +16,88 @@ class timeUpdateWidget extends StatefulWidget {
 }
 
 class _timeUpdateWidgetState extends State<timeUpdateWidget> {
+  int startHour = globalStartHour;
+  int endHour = globalEndHour;
+  int startMinute = globalStartMinute;
+  int endMinute = globalEndMinute;
+
+  int countdown = 0;
+  Timer? timer;
+
+  final TextEditingController durationController =
+      TextEditingController(text: '2:00');
+
+  final TextEditingController cycleHandleController =
+      TextEditingController(text: '1:00');
+
+  void newNotif() {
+    AwesomeNotifications().initialize(
+        null,
+        [
+          NotificationChannel(
+              channelKey: 'channelKey',
+              channelName: 'channelName',
+              channelDescription: 'channelDescription'),
+        ],
+        debug: true);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _updateCountdown();
+    durationController.text =
+        "${sprinkleDurationMinute.toString().padLeft(2, '0')}:${sprinkleDurationSeconds.toString().padLeft(2, '0')}";
+    cycleHandleController.text =
+        "${cycleTimeHour.toString().padLeft(2, '0')}:${cycleTimeMinute.toString().padLeft(2, '0')}";
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
+    newNotif();
+  }
+
+  void triggerNotification() {
+    AwesomeNotifications().createNotification(
+      content: NotificationContent(
+          id: 10,
+          channelKey: 'channelKey',
+          title: 'System Refill',
+          body: 'System is being Refilled'),
+    );
+  }
+
+  void _updateCountdown() {
+    setState(() {
+      countdown = (endHour - startHour) * 60;
+    });
+    int hours = countdown ~/ 60;
+    int minutes = countdown % 60;
+    timer?.cancel();
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (countdown > 0) {
+        setState(() {
+          countdown--;
+        });
+      } else {
+        timer.cancel();
+
+        triggerNotification();
+      }
+    });
+  }
+
+  void _onTimeChanged(double newStartHour, double newEndHour) {
+    setState(() {
+      startHour = newStartHour.toInt();
+      endHour = newEndHour.toInt();
+    });
+    _updateCountdown();
+  }
+
   void _showBottomSheet() {
+    print("Start hour: ${startHour} , End Hour: ${endHour}");
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -60,19 +146,20 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
                           alignment: Alignment
                               .centerLeft, // Align the text to the left
                           child: Padding(
-                            padding: const EdgeInsets.only(
-                                left:
-                                    20.0), // Add padding to keep it away from the edge
+                            padding: const EdgeInsets.only(left: 20.0),
+                            // Add padding to keep it away from the edge
                             child: Text(
                               'Water Regulation Cycle',
-                              style: TextStyle(color: Colors.white),
+                              style: GoogleFonts.poppins(color: Colors.white),
                             ),
                           ),
                         ),
+                        SizedBox(height: 6),
                         Padding(
                           padding:
                               const EdgeInsets.only(left: 16.0, right: 16.0),
                           child: Container(
+                            width: MediaQuery.of(context).size.width * 1.0,
                             height: MediaQuery.of(context).size.height * 0.4,
                             padding: EdgeInsets.all(
                                 MediaQuery.of(context).size.width * 0.03),
@@ -82,9 +169,11 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
                                   MediaQuery.of(context).size.width * 0.03),
                             ),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                TwoSidedSliderGauge()
+                                CircularDragTimerWidget(
+                                  onTimeChanged: _onTimeChanged,
+                                ),
                               ],
                             ),
                           ),
@@ -106,9 +195,9 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
                                         MediaQuery.of(context).size.width *
                                             0.03),
                                   ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  child: ListView(
+                                    // crossAxisAlignment:
+                                    //     CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         mainAxisAlignment:
@@ -116,7 +205,7 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
                                         children: [
                                           Text(
                                             '',
-                                            style: TextStyle(
+                                            style: GoogleFonts.poppins(
                                               fontSize: MediaQuery.of(context)
                                                       .size
                                                       .width *
@@ -127,7 +216,8 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
                                           InkWell(
                                             onTap: () {},
                                             child: Image.asset(
-                                              'assets/images/water_drops_bold.png', // Replace with your image path
+                                              'assets/images/water_drops_bold.png',
+                                              // Replace with your image path
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width *
@@ -147,7 +237,7 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
                                         children: [
                                           Text(
                                             '02:00',
-                                            style: TextStyle(
+                                            style: GoogleFonts.poppins(
                                               fontSize: MediaQuery.of(context)
                                                       .size
                                                       .width *
@@ -165,10 +255,12 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
                                                         MediaQuery.of(context)
                                                                 .size
                                                                 .width *
-                                                            0.01), // Adjust the offset for subscript effect
+                                                            0.01),
+                                                    // Adjust the offset for subscript effect
                                                     child: Text(
-                                                      ' Mins', // Subscript text
-                                                      style: TextStyle(
+                                                      ' Secs', // Subscript text
+                                                      style:
+                                                          GoogleFonts.poppins(
                                                         fontSize: MediaQuery.of(
                                                                     context)
                                                                 .size
@@ -203,9 +295,9 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
                                         MediaQuery.of(context).size.width *
                                             0.03),
                                   ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  child: ListView(
+                                    // crossAxisAlignment:
+                                    //     CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         mainAxisAlignment:
@@ -224,7 +316,8 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
                                           InkWell(
                                             onTap: () {},
                                             child: Image.asset(
-                                              'assets/images/time_clock.png', // Replace with your image path
+                                              'assets/images/time_clock.png',
+                                              // Replace with your image path
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width *
@@ -244,7 +337,7 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
                                         children: [
                                           Text(
                                             '01:00',
-                                            style: TextStyle(
+                                            style: GoogleFonts.poppins(
                                               fontSize: MediaQuery.of(context)
                                                       .size
                                                       .width *
@@ -262,10 +355,12 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
                                                         MediaQuery.of(context)
                                                                 .size
                                                                 .width *
-                                                            0.01), // Adjust the offset for subscript effect
+                                                            0.01),
+                                                    // Adjust the offset for subscript effect
                                                     child: Text(
                                                       ' Hrs', // Subscript text
-                                                      style: TextStyle(
+                                                      style:
+                                                          GoogleFonts.poppins(
                                                         fontSize: MediaQuery.of(
                                                                     context)
                                                                 .size
@@ -303,7 +398,7 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
                                   minimumSize: Size(
                                       MediaQuery.of(context).size.width * 0.44,
                                       50), // Increase size
-                                  textStyle: TextStyle(
+                                  textStyle: GoogleFonts.poppins(
                                     fontSize: 18, // Increase text size
                                   ),
                                   shape: RoundedRectangleBorder(
@@ -313,7 +408,8 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
                                 ),
                                 child: Text(
                                   'Cancel',
-                                  style: TextStyle(color: Colors.black),
+                                  style:
+                                      GoogleFonts.poppins(color: Colors.black),
                                 ),
                               ),
                               SizedBox(
@@ -335,8 +431,9 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
                                   ),
                                 ),
                                 child: Text(
-                                  'Reset',
-                                  style: TextStyle(color: Colors.white),
+                                  'Save',
+                                  style:
+                                      GoogleFonts.poppins(color: Colors.white),
                                 ),
                               ),
                             ],
@@ -376,22 +473,22 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
             children: [
               Text(
                 'Next Cycle in',
-                style: TextStyle(fontSize: 20),
+                style: GoogleFonts.poppins(fontSize: 20),
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
                 children: [
                   Text(
-                    '28:42',
-                    style: TextStyle(fontSize: 35),
+                    '$countdown',
+                    style: GoogleFonts.poppins(fontSize: 35),
                   ),
                   SizedBox(width: 4),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Text(
                       'mins',
-                      style: TextStyle(fontSize: 20),
+                      style: GoogleFonts.poppins(fontSize: 20),
                     ),
                   ),
                 ],
@@ -403,74 +500,3 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
     );
   }
 }
-
-class TwoSidedSliderGauge extends StatefulWidget {
-  @override
-  _TwoSidedSliderGaugeState createState() => _TwoSidedSliderGaugeState();
-}
-
-class _TwoSidedSliderGaugeState extends State<TwoSidedSliderGauge> {
-  double _startValue = 2; // Example initial start value
-  double _endValue = 8;   // Example initial end value
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 290,
-        height: 290,
-        child: SfRadialGauge(
-          
-          axes: <RadialAxis>[
-            RadialAxis(
-              minimum: 0,
-              maximum: 24,
-              interval: 1,
-              startAngle: 270, // Start at the top
-              endAngle: 630,   // Complete circle (360 + 270)
-              pointers: <GaugePointer>[
-                // RangePointer for the start handle
-                RangePointer(
-                  value: _startValue,
-                  width: 10,
-                  color: Colors.orange,
-                  enableDragging: true, // Enables dragging of the pointer
-                  onValueChanged: (double value) {
-                    setState(() {
-                      _startValue = value; // Update the start value
-                    });
-                  },
-                ),
-                // RangePointer for the end handle
-                RangePointer(
-                  value: _endValue,
-                  width: 10,
-                  color: Color(0xFFE5E3E5),
-                  enableDragging: true, // Enables dragging of the pointer
-                  onValueChanged: (double value) {
-                    setState(() {
-                      _endValue = value; // Update the end value
-                    });
-                  },
-                ),
-              ],
-              ranges: <GaugeRange>[
-                // Range between two pointers (sliders)
-                GaugeRange(
-                  startValue: _startValue, // Start of the range
-                  endValue: _endValue,     // End of the range
-                  color: Colors.orangeAccent.withOpacity(0.3),
-                  startWidth: 10,
-                  endWidth: 10,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-

@@ -2,17 +2,16 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:xen_bloom/firebase_options.dart';
-
 import 'features/authentication_screens/modified_login.dart';
+import './features/Elements/myWidget.dart';
+import 'features/authentication_screens/globalVariable.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   _getFCMToken();
-
+  await fetchAndStoreSettings();
   runApp(const MyApp());
 }
 
@@ -32,7 +31,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFEFEFF1),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       home: mLoginScreen(),

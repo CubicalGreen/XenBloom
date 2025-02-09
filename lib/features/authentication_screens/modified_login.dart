@@ -1,8 +1,8 @@
-import 'dart:async'; // Import for Timer
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../connect_screen.dart';
-import '../home_screen/home_page.dart';
 import 'google_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class mLoginScreen extends StatefulWidget {
   const mLoginScreen({super.key});
@@ -42,22 +42,26 @@ class _mLoginScreenState extends State<mLoginScreen> {
     super.dispose();
   }
 
-  Widget _buildPage(String imagePath, String title, String description, double w, double h) {
+  Widget _buildPage(
+      String imagePath, String title, String description, double w, double h) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Image.asset(imagePath, height: h * 0.5, width: w * 0.95),
         SizedBox(height: h * 0.1),
-
         Text(
           title,
-          style: TextStyle(fontSize: w * 0.065, fontWeight: FontWeight.bold),
+          style: GoogleFonts.poppins(
+              fontSize: w * 0.065, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: h * 0.01),
         Text(
           description,
-          style: TextStyle(fontSize: w * 0.05, color: Colors.grey),
+          style: GoogleFonts.poppins(
+            fontSize: w * 0.05,
+            color: Colors.grey,
+          ),
           textAlign: TextAlign.center,
         ),
       ],
@@ -76,8 +80,8 @@ class _mLoginScreenState extends State<mLoginScreen> {
         Color dotColor = isCurrentPage
             ? Colors.black
             : isBeforeCurrentPage
-            ? Colors.grey.shade500
-            : Colors.grey.shade300;
+                ? Colors.grey.shade500
+                : Colors.grey.shade300;
 
         return AnimatedContainer(
           duration: Duration(milliseconds: 300),
@@ -94,7 +98,9 @@ class _mLoginScreenState extends State<mLoginScreen> {
   }
 
   void _authenticate() async {
-    await FirebaseServices().signinWithGoogle();
+    String uid = await FirebaseServices().signinWithGoogle();
+    print("Reached this function");
+    // saving the user credentials in local storage
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => ConnectScreen()),
@@ -172,7 +178,11 @@ class _mLoginScreenState extends State<mLoginScreen> {
             child: _buildDots(w, h),
           ),
           Padding(
-            padding: EdgeInsets.only(left: w * 0.05, right: w * 0.05, top: h * 0.1, bottom: h * 0.02),
+            padding: EdgeInsets.only(
+                left: w * 0.05,
+                right: w * 0.05,
+                top: h * 0.1,
+                bottom: h * 0.02),
             child: Column(
               children: [
                 Spacer(),
@@ -184,7 +194,7 @@ class _mLoginScreenState extends State<mLoginScreen> {
                       padding: EdgeInsets.only(left: w * 0.02),
                       child: Text(
                         'Continue with',
-                        style: TextStyle(fontSize: w * 0.05),
+                        style: GoogleFonts.poppins(fontSize: w * 0.05),
                       ),
                     ),
                     label: Image.asset(
@@ -195,7 +205,8 @@ class _mLoginScreenState extends State<mLoginScreen> {
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.black,
-                      padding: EdgeInsets.symmetric(horizontal: w * 0.125, vertical: h * 0.02),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: w * 0.125, vertical: h * 0.02),
                     ),
                   ),
                 ),

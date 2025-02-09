@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:xen_bloom/connect_screen.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import '../authentication_screens/google_auth.dart';
 import '../authentication_screens/modified_login.dart';
 import '../other_screens/name_screen.dart';
@@ -13,10 +13,13 @@ class CustomDrawer extends StatelessWidget {
 
     void _logout() async {
       // Implement your logout logic here
-      await FirebaseServices().googleSignOut(); // Ensure this method exists in your FirebaseServices
+      await FirebaseServices()
+          .googleSignOut(); // Ensure this method exists in your FirebaseServices
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => mLoginScreen()), // Replace with your login screen or initial route
+        MaterialPageRoute(
+            builder: (context) =>
+                mLoginScreen()), // Replace with your login screen or initial route
       );
     }
 
@@ -30,7 +33,7 @@ class CustomDrawer extends StatelessWidget {
             ),
             child: Text(
               'Menu',
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 color: Colors.white,
                 fontSize: w * 0.06, // Adjust font size
               ),
@@ -49,7 +52,9 @@ class CustomDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => NameScreen()), // Navigate to the ConnectScreen
+                MaterialPageRoute(
+                    builder: (context) =>
+                        NameScreen()), // Navigate to the ConnectScreen
               );
             },
           ),

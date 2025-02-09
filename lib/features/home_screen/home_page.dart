@@ -1,6 +1,9 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:xen_bloom/features/authentication_screens/globalVariable.dart';
 import 'package:xen_bloom/features/time_screens/time_update.dart';
 import '../Elements/bottomNavBar.dart';
 import '../Elements/customContainer.dart';
@@ -8,6 +11,12 @@ import '../Elements/customDrawer.dart';
 import '../Elements/myWidget.dart';
 import '../Elements/waterContainer.dart';
 import '../ph_screens/ph_widget.dart';
+import '../other_screens/send_alert.dart';
+import '../Elements/ppmContainer.dart';
+import '../other_screens/name_screen.dart';
+import '../apis/get_updates.dart';
+import '../other_screens/profile_menu.dart';
+import '../authentication_screens/globalVariable.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,11 +29,41 @@ class _HomePageState extends State<HomePage> {
   double _sliderValue = 0.7; // Initial value
   int _selectedIndex = 0; // Index for bottom navigation bar
   bool _isChecked = false; // Initial checkbox value
+  final SendAlert sendNotificationService = SendAlert();
+  String retrievedTime = "";
+  String message = "";
+
+  // generating a test notif here
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchAndSetMessage();
+    fetchAndStoreSettings();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void _generateNotif() {
+    sendNotificationService.sendAlert("SystemOnline");
+  }
+
+  void _fetchAndSetMessage() async {
+    final data = await fetchMessage(globalDeviceId);
+    if (data != null) {
+      setState(() {
+        retrievedTime = data['retrievalTime'];
+        message = data['message'];
+      });
+      print(retrievedTime);
+      print(message);
+    } else {
+      print("failed to fetch message");
+    }
   }
 
   @override
@@ -47,32 +86,52 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: Icon(Icons.notifications),
             color: Colors.black,
-            onPressed: () {
-              // Handle notifications action
-            },
+            onPressed: _generateNotif,
           ),
           IconButton(
             icon: ImageIcon(
-              AssetImage('assets/images/profile.png'), // Path to your home image asset
+              AssetImage('assets/images/profile.png'),
+              // Path to your home image asset
               color: Colors.black,
               size: 28,
             ),
             color: Colors.black,
             onPressed: () {
-              // Handle settings action
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return Dialog(
+                    elevation: 0,
+                    backgroundColor: Colors.transparent,
+                    insetPadding: EdgeInsets.only(right: 10),
+                    // ✅ Prevents right-side overflow
+                    child: ProfileMenu(
+                      onChangeSettings: () {
+                        print("Change Settings Clicked");
+                        Navigator.pop(context);
+                      },
+                      onTest: () {
+                        print("Test Clicked");
+                        Navigator.pop(context);
+                      },
+                    ),
+                  );
+                },
+              );
             },
           ),
         ],
       ),
       drawer: CustomDrawer(),
       body: Padding(
-        padding: const EdgeInsets.only(top: 5.0, right: 16, left: 16, bottom: 5),
+        padding:
+            const EdgeInsets.only(top: 5.0, right: 16, left: 16, bottom: 5),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: EdgeInsets.only(top: 8,bottom: 8),
+                padding: EdgeInsets.only(top: 8, bottom: 8),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
@@ -87,13 +146,14 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.only(left: 8.0),
                           child: Text(
                             "To Do",
-                            style: TextStyle(fontSize: 20),
+                            style: GoogleFonts.poppins(fontSize: 20),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: Image.asset(
-                            'assets/images/dot_icon.png', // Add the path to your dot image here
+                            'assets/images/dot_icon.png',
+                            // Add the path to your dot image here
                             width: 25, // Adjust the size as needed
                             height: 35,
                           ),
@@ -103,7 +163,8 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       height: 1,
                       color: Colors.grey.shade200, // Adjust the color as needed
-                      width: double.infinity, // Ensures the line takes up the full width
+                      width: double
+                          .infinity, // Ensures the line takes up the full width
                     ),
                     Row(
                       children: [
@@ -117,11 +178,12 @@ class _HomePageState extends State<HomePage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          activeColor: Colors.red, // Change the color of the checkbox
+                          activeColor:
+                              Colors.red, // Change the color of the checkbox
                         ),
                         Text(
                           "Refill the reservoir",
-                          style: TextStyle(fontSize: 16),
+                          style: GoogleFonts.poppins(fontSize: 16),
                         ),
                       ],
                     ),
@@ -129,47 +191,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               SizedBox(height: h * 0.01),
-              // Header: Next Cycle Countdown
-              // Container(
-              //   height: h * 0.17,
-              //   padding: EdgeInsets.only(
-              //       top: h * 0.068, left: w * 0.04, right: w * 0.04),
-              //   decoration: BoxDecoration(
-              //     color: Colors.white,
-              //     borderRadius: BorderRadius.circular(10),
-              //   ),
-              //   child: Align(
-              //     alignment: Alignment.bottomLeft,
-              //     child: Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         Text(
-              //           'Next Cycle in',
-              //           style: TextStyle(fontSize: 20),
-              //         ),
-              //         Row(
-              //           crossAxisAlignment: CrossAxisAlignment.baseline,
-              //           textBaseline: TextBaseline.alphabetic,
-              //           children: [
-              //             Text(
-              //               '28:42',
-              //               style: TextStyle(fontSize: 35),
-              //             ),
-              //             SizedBox(width: 4),
-              //             Align(
-              //               alignment: Alignment.bottomCenter,
-              //               child: Text(
-              //                 'mins',
-              //                 style: TextStyle(fontSize: 20),
-              //               ),
-              //             ),
-              //           ],
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-                
-              // ),
               timeUpdateWidget(),
               SizedBox(height: h * 0.007),
               // Main Content
@@ -179,14 +200,7 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(width: w * 0.02),
                   Column(
                     children: [
-                      CustomContainer(
-                        height: h * 0.2,
-                        width: w * 0.445,
-                        imagePath: 'assets/images/concerntration.png',
-                        title: 'Concentration',
-                        value: '805',
-                        unit: 'ppm',
-                      ),
+                      PpmContainer(),
                       SizedBox(height: h * 0.01),
                       pHWidget(),
                     ],
@@ -199,7 +213,7 @@ class _HomePageState extends State<HomePage> {
               SizedBox(height: h * 0.02),
               // Updates Section
               Container(
-                padding: EdgeInsets.only(top: 12,bottom: 12),
+                padding: EdgeInsets.only(top: 12, bottom: 12),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
@@ -214,13 +228,15 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.only(left: 8.0),
                           child: Text(
                             "Updates",
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            style: GoogleFonts.poppins(
+                                fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: Image.asset(
-                            'assets/images/dot_icon.png', // Add the path to your dot image here
+                            'assets/images/dot_icon.png',
+                            // Add the path to your dot image here
                             width: 25, // Adjust the size as needed
                             height: 35,
                           ),
@@ -230,22 +246,22 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       height: 1,
                       color: Colors.grey.shade200, // Adjust the color as needed
-                      width: double.infinity, // Ensures the line takes up the full width
+                      width: double
+                          .infinity, // Ensures the line takes up the full width
                     ),
                     SizedBox(height: 8),
-                    _buildUpdateRow('08:00', 'ph was recorded 6.8'),
-                    _buildUpdateRow('08:06', 'ph was balanced to 5.6'),
-                    _buildUpdateRow('08:06', 'Nutrients Concentration was recorded 600 ppm'),
-                    _buildUpdateRow('08:06', 'Nutrients Concentration was balanced to 950 ppm'),
+                    _buildUpdateRow(retrievedTime, message),
                   ],
                 ),
               ),
 
-
               SizedBox(height: h * 0.02),
               // Add Device Button
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => NameScreen()));
+                },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(5),
                   child: Container(
@@ -259,7 +275,7 @@ class _HomePageState extends State<HomePage> {
                       child: Center(
                         child: Text(
                           'Add a device',
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             color: Colors.grey.shade500,
                             fontSize: 20,
                           ),
@@ -295,7 +311,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildUpdateRow(String time, String update) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0,left: 12,right: 12),
+      padding: const EdgeInsets.only(top: 8.0, left: 12, right: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -318,7 +334,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
 
 class CustomSlider extends StatefulWidget {
   final double value; // Current value of the slider
@@ -358,7 +373,8 @@ class _CustomSliderState extends State<CustomSlider> {
       activeColor: Color.fromARGB(255, 28, 215, 144),
       value: _currentValue,
       min: 0,
-      max: 1, // Adjust the max value as needed
+      max: 1,
+      // Adjust the max value as needed
       onChanged: (newValue) {
         setState(() {
           _currentValue = newValue;
@@ -368,4 +384,3 @@ class _CustomSliderState extends State<CustomSlider> {
     );
   }
 }
-

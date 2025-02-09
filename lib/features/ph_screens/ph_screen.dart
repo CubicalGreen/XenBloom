@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../Elements/bottomNavBar.dart';
 import '../Elements/last_updated_card.dart';
+import '../authentication_screens/globalVariable.dart';
 
 class pHScreen extends StatefulWidget {
   @override
@@ -10,6 +11,27 @@ class pHScreen extends StatefulWidget {
 class _pHScreenState extends State<pHScreen> {
   int _selectedIndex = 0; // Index for bottom navigation bar
   double currentPH = 6.3; // Manually set pH value
+  bool _isEditingMin = false;
+  bool _isEditingMax = false;
+  double minPH = 5.4;
+  double maxPH = 6.5;
+
+  final TextEditingController _minController = TextEditingController();
+  final TextEditingController _maxController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _minController.text = minPH.toString();
+    _maxController.text = maxPH.toString();
+  }
+
+  @override
+  void dispose() {
+    _minController.dispose();
+    _maxController.dispose();
+    super.dispose();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -40,7 +62,8 @@ class _pHScreenState extends State<pHScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('pH', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: Text('pH',
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         automaticallyImplyLeading: true,
       ),
       body: Padding(
@@ -97,36 +120,52 @@ class _pHScreenState extends State<pHScreen> {
                         ),
                         // Pointing Container with Arrow
                         Positioned(
-                          top: h * 0.4 - (h * 0.4 * 6.5 / 14) + (h * 0.4 * 6.5 / (2 * 14)),
+                          top: h * 0.4 -
+                              (h * 0.4 * 6.5 / 14) +
+                              (h * 0.4 * 6.5 / (2 * 14)),
                           left: w * 0.3,
                           child: Text(
                             'Too Acidic',
-                            style: TextStyle(fontSize: w * 0.035, color: Colors.grey[600]),
+                            style: TextStyle(
+                                fontSize: w * 0.035, color: Colors.grey[600]),
                           ),
                         ),
                         Positioned(
-                          top: h * 0.4 - (h * 0.4 * 6.5 / 14) - (h * 0.4 * 1 / 14) + (h * 0.4 * 1 / (2 * 14)),
+                          top: h * 0.4 -
+                              (h * 0.4 * 6.5 / 14) -
+                              (h * 0.4 * 1 / 14) +
+                              (h * 0.4 * 1 / (2 * 14)),
                           left: w * 0.3,
                           child: Text(
                             'Recommended',
-                            style: TextStyle(fontSize: w * 0.035, color: Colors.grey[600]),
+                            style: TextStyle(
+                                fontSize: w * 0.035, color: Colors.grey[600]),
                           ),
                         ),
                         Positioned(
-                          top: h * 0.4 - (h * 0.4 * 6.5 / 14) - (h * 0.4 * 1 / 14) - (h * 0.4 * 6.5 / 14) + (h * 0.4 * 6.5 / (2 * 14)),
+                          top: h * 0.4 -
+                              (h * 0.4 * 6.5 / 14) -
+                              (h * 0.4 * 1 / 14) -
+                              (h * 0.4 * 6.5 / 14) +
+                              (h * 0.4 * 6.5 / (2 * 14)),
                           left: w * 0.3,
                           child: Text(
                             'Too Basic',
-                            style: TextStyle(fontSize: w * 0.035, color: Colors.grey[600]),
+                            style: TextStyle(
+                                fontSize: w * 0.035, color: Colors.grey[600]),
                           ),
                         ),
                         Positioned(
-                          top: _calculateTopOffset(currentPH, barHeight) - (w * 0.05), // Adjust to center the arrow
-                          left: -w * 0.1, // Adjust this value to align the arrow
+                          top: _calculateTopOffset(currentPH, barHeight) -
+                              (w * 0.05),
+                          // Adjust to center the arrow
+                          left: -w * 0.1,
+                          // Adjust this value to align the arrow
                           child: Column(
                             children: [
                               Container(
-                                padding: EdgeInsets.symmetric(vertical: h * 0.01, horizontal: w * 0.02),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: h * 0.01, horizontal: w * 0.02),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(w * 0.05),
@@ -177,19 +216,11 @@ class _pHScreenState extends State<pHScreen> {
               children: [
                 Expanded(
                   child: Container(
-                    height: h*0.12,
+                    height: h * 0.12,
                     padding: EdgeInsets.all(w * 0.03),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(w * 0.03),
-                      // boxShadow: [
-                      //   BoxShadow(
-                      //     color: Colors.grey.withOpacity(0.2),
-                      //     spreadRadius: w * 0.005,
-                      //     blurRadius: w * 0.02,
-                      //     offset: Offset(0, w * 0.01),
-                      //   ),
-                      // ],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,24 +236,41 @@ class _pHScreenState extends State<pHScreen> {
                               ),
                             ),
                             InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                // Handle refresh logic here
+                                print('Refresh is working');
+                              },
                               child: Image.asset(
-                                'assets/images/refresh_icon.png', // Replace with your image path
+                                'assets/images/refresh_icon.png',
+                                // Replace with your image path
                                 width: w * 0.07,
-                                color: Colors.grey[400], // Apply the same color as the icon
+                                color: Colors.grey[
+                                    400], // Apply the same color as the icon
                               ),
                             ),
                           ],
                         ),
                         SizedBox(height: h * 0.0075),
-                        Text(
-                          '5.5',
-                          style: TextStyle(
-                            fontSize: w * 0.08,
-                            // fontWeight: FontWeight.bold,
-                            color: Colors.grey[800],
-                          ),
-                        ),
+                        _isEditingMin
+                            ? TextField(
+                                controller: _minController,
+                                keyboardType: TextInputType.number,
+                                autofocus: true,
+                                onSubmitted: (value) {
+                                  setState(() {
+                                    minPH = double.tryParse(value) ?? minPH;
+                                    _isEditingMin =
+                                        false; // Hide the input after submitting
+                                  });
+                                },
+                              )
+                            : Text(
+                                minPH.toString(),
+                                style: TextStyle(
+                                  fontSize: w * 0.08,
+                                  color: Colors.grey[800],
+                                ),
+                              ),
                       ],
                     ),
                   ),
@@ -230,7 +278,7 @@ class _pHScreenState extends State<pHScreen> {
                 SizedBox(width: w * 0.03),
                 Expanded(
                   child: Container(
-                    height: h*0.12,
+                    height: h * 0.12,
                     padding: EdgeInsets.all(w * 0.03),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -260,9 +308,11 @@ class _pHScreenState extends State<pHScreen> {
                             InkWell(
                               onTap: () {},
                               child: Image.asset(
-                                'assets/images/refresh_icon.png', // Replace with your image path
+                                'assets/images/refresh_icon.png',
+                                // Replace with your image path
                                 width: w * 0.07,
-                                color: Colors.grey[400], // Apply the same color as the icon
+                                color: Colors.grey[
+                                    400], // Apply the same color as the icon
                               ),
                             ),
                           ],
@@ -290,9 +340,12 @@ class _pHScreenState extends State<pHScreen> {
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.black),
                   ),
-                  child: Text('Save Changes', style: TextStyle(color: Colors.white, fontSize: w * 0.05)),
+                  child: Text('Save Changes',
+                      style:
+                          TextStyle(color: Colors.white, fontSize: w * 0.05)),
                 ),
               ),
             ),

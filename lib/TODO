@@ -1,0 +1,4 @@
+start the timer for the cycles
+show the timer countdown
+send an update to the backend "Water cycle is started"
+show that update in the frontend in updates list

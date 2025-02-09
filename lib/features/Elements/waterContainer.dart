@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class WaterContainer extends StatefulWidget {
   @override
@@ -47,9 +48,13 @@ class _WaterContainerState extends State<WaterContainer> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Water Level', style: TextStyle(fontSize: 16, color: Colors.white)),
+                    Text('Water Level',
+                        style: GoogleFonts.poppins(
+                            fontSize: 16, color: Colors.white)),
                     SizedBox(height: 4),
-                    Text('${(_waterLevel * 100).toStringAsFixed(1)}%', style: TextStyle(fontSize: 16, color: Colors.white)),
+                    Text('${(_waterLevel * 100).toStringAsFixed(1)}%',
+                        style: GoogleFonts.poppins(
+                            fontSize: 16, color: Colors.white)),
                   ],
                 ),
               ),

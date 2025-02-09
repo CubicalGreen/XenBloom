@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LastUpdateCard extends StatelessWidget {
   @override
@@ -27,7 +28,7 @@ class LastUpdateCard extends StatelessWidget {
             children: [
               Text(
                 'Last Update',
-                style: TextStyle(fontSize: 16),
+                style: GoogleFonts.poppins(fontSize: 16),
               ),
               Container(
                 width: 10,
@@ -48,21 +49,21 @@ class LastUpdateCard extends StatelessWidget {
           ),
           RichText(
             text: TextSpan(
-              style: TextStyle(color: Colors.black, fontSize: 15),
+              style: GoogleFonts.poppins(color: Colors.black, fontSize: 15),
               children: [
                 TextSpan(
                   text: 'System was last balanced, ',
                 ),
                 TextSpan(
                   text: '08:05am ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
                 ),
                 TextSpan(
                   text: 'on ',
                 ),
                 TextSpan(
                   text: '8th July, 2024',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
                 ),
               ],
             ),

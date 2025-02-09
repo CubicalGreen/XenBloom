@@ -1,5 +1,6 @@
 import 'dart:async'; // Import for Timer
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../connect_screen.dart';
 import '../home_screen/home_page.dart';
 import 'google_auth.dart';
@@ -42,7 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  Widget _buildPage(String imagePath, String title, String description, double w, double h) {
+  Widget _buildPage(
+      String imagePath, String title, String description, double w, double h) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -58,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
         SizedBox(height: h * 0.01),
         Text(
           description,
-          style: TextStyle(fontSize: w * 0.05, color: Colors.grey),
+          style: GoogleFonts.poppins(fontSize: w * 0.05, color: Colors.grey),
           textAlign: TextAlign.center,
         ),
       ],
@@ -77,8 +79,8 @@ class _LoginScreenState extends State<LoginScreen> {
         Color dotColor = isCurrentPage
             ? Colors.black
             : isBeforeCurrentPage
-            ? Colors.grey.shade500
-            : Colors.grey.shade300;
+                ? Colors.grey.shade500
+                : Colors.grey.shade300;
 
         return AnimatedContainer(
           duration: Duration(milliseconds: 300),
@@ -167,7 +169,11 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: w * 0.05, right: w * 0.05, top: h * 0.1, bottom: h * 0.02),
+            padding: EdgeInsets.only(
+                left: w * 0.05,
+                right: w * 0.05,
+                top: h * 0.1,
+                bottom: h * 0.02),
             child: Column(
               children: [
                 Spacer(),
@@ -190,7 +196,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.black,
-                      padding: EdgeInsets.symmetric(horizontal: w * 0.125, vertical: h * 0.02),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: w * 0.125, vertical: h * 0.02),
                     ),
                   ),
                 ),

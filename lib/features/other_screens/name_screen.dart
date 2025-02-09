@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'add_device.dart';
 import 'choose_system.dart';
+import 'send_alert.dart';
 
 class NameScreen extends StatefulWidget {
   const NameScreen({super.key});
@@ -19,9 +20,10 @@ class _NameScreenState extends State<NameScreen> {
     'Herb Hollow',
     'Ivy Nook'
   };
-  
+
   bool isNameAvailable = true;
   String message = '';
+  final AddDevice addDeviceService = AddDevice();
 
   @override
   void initState() {
@@ -57,6 +59,7 @@ class _NameScreenState extends State<NameScreen> {
     });
   }
 
+  // continue button
   void _onContinue() {
     final name = _controller.text.trim();
 
@@ -74,10 +77,13 @@ class _NameScreenState extends State<NameScreen> {
       return;
     }
 
+    addDeviceService.addDeviceInBackend(name.toString(), 'default');
     // Perform further actions like navigating to the next screen
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ChooseSystem()), // Replace with your home page widget
+      MaterialPageRoute(
+          builder: (context) =>
+              ChooseSystem()), // Replace with your home page widget
     );
   }
 
@@ -99,7 +105,9 @@ class _NameScreenState extends State<NameScreen> {
               left: 18.0,
               right: 18.0,
               top: 18.0,
-              bottom: isKeyboardVisible ? MediaQuery.of(context).viewInsets.bottom : 18.0,
+              bottom: isKeyboardVisible
+                  ? MediaQuery.of(context).viewInsets.bottom
+                  : 18.0,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,7 +146,9 @@ class _NameScreenState extends State<NameScreen> {
                     ),
                     if (_controller.text.isNotEmpty)
                       Icon(
-                        isNameAvailable ? Icons.check_circle_outline_sharp : Icons.error,
+                        isNameAvailable
+                            ? Icons.check_circle_outline_sharp
+                            : Icons.error,
                         color: isNameAvailable ? Colors.green : Colors.red,
                       ),
                   ],
@@ -148,7 +158,8 @@ class _NameScreenState extends State<NameScreen> {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
                       message,
-                      style: TextStyle(color: isNameAvailable ? Colors.green : Colors.red),
+                      style: TextStyle(
+                          color: isNameAvailable ? Colors.green : Colors.red),
                     ),
                   ),
                 SizedBox(height: h * 0.03),
@@ -164,7 +175,8 @@ class _NameScreenState extends State<NameScreen> {
                           style: TextStyle(fontSize: 12), // Reduce font size
                         ),
                         backgroundColor: Colors.grey.shade100,
-                        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0), // Reduce padding
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4.0), // Reduce padding
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                           side: BorderSide(color: Colors.transparent, width: 1),
@@ -180,7 +192,8 @@ class _NameScreenState extends State<NameScreen> {
                   child: ElevatedButton(
                     onPressed: _onContinue,
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.black),
                     ),
                     child: Text(
                       'Continue',

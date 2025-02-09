@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomContainer extends StatelessWidget {
   final double height;
@@ -41,7 +42,7 @@ class CustomContainer extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: TextStyle(fontSize: 18),
+                      style: GoogleFonts.poppins(fontSize: 18),
                     ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -49,7 +50,7 @@ class CustomContainer extends StatelessWidget {
                       children: [
                         Text(
                           value,
-                          style: TextStyle(fontSize: 35),
+                          style: GoogleFonts.poppins(fontSize: 35),
                         ),
                         if (unit != null) ...[
                           SizedBox(width: 4),
@@ -57,7 +58,7 @@ class CustomContainer extends StatelessWidget {
                             alignment: Alignment.bottomCenter,
                             child: Text(
                               unit!,
-                              style: TextStyle(fontSize: 20),
+                              style: GoogleFonts.poppins(fontSize: 20),
                             ),
                           ),
                         ],
