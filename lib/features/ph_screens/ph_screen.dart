@@ -216,14 +216,13 @@ class _pHScreenState extends State<pHScreen> {
               children: [
                 Expanded(
                   child: Container(
-                    height: h * 0.12,
+                    height: h * 0.16,
                     padding: EdgeInsets.all(w * 0.03),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(w * 0.03),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: ListView(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -306,7 +305,10 @@ class _pHScreenState extends State<pHScreen> {
                               ),
                             ),
                             InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                print("InkWell tapped!");
+                                _showInputDialog("Max.");
+                              },
                               child: Image.asset(
                                 'assets/images/refresh_icon.png',
                                 // Replace with your image path
@@ -319,7 +321,7 @@ class _pHScreenState extends State<pHScreen> {
                         ),
                         SizedBox(height: h * 0.0075),
                         Text(
-                          '6.5',
+                          maxPH.toString(),
                           style: TextStyle(
                             fontSize: w * 0.08,
                             // fontWeight: FontWeight.bold,
@@ -369,6 +371,45 @@ class _pHScreenState extends State<pHScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  void _showInputDialog(String label) {
+    print("btn clicked");
+    TextEditingController controller = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Enter $label value'),
+          content: TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(hintText: "Enter value"),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  double value = double.tryParse(controller.text) ?? 0.0;
+                  if (label == 'Min.') {
+                    minPH = value;
+                  } else if (label == 'Max.') {
+                    maxPH = value;
+                  }
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

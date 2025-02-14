@@ -60,7 +60,7 @@ class _NameScreenState extends State<NameScreen> {
   }
 
   // continue button
-  void _onContinue() {
+  void _onContinue() async {
     final name = _controller.text.trim();
 
     if (name.isEmpty) {
@@ -77,14 +77,19 @@ class _NameScreenState extends State<NameScreen> {
       return;
     }
 
-    addDeviceService.addDeviceInBackend(name.toString(), 'default');
-    // Perform further actions like navigating to the next screen
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) =>
-              ChooseSystem()), // Replace with your home page widget
-    );
+    bool response =
+        await addDeviceService.addDeviceInBackend(name.toString(), 'default');
+
+    if (response == true) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                ChooseSystem()), // Replace with your home page widget
+      );
+    } else {
+      print("There was an issue creating a new device");
+    }
   }
 
   @override

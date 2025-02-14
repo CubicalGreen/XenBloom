@@ -39,7 +39,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _fetchAndSetMessage();
-    fetchAndStoreSettings();
   }
 
   void _onItemTapped(int index) {
@@ -70,7 +69,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
-
+    fetchAndStoreSettings();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import '../apis/get_settings.dart';
+import 'package:flutter/material.dart';
 
 final settings = GetSettings();
 
@@ -8,11 +9,11 @@ String? globalDeviceId;
 String? globalDocumentId;
 
 // Default values
-int tds_min = 100;
-int tds_max = 1200;
+int? tds_min;
+int? tds_max;
 
-double ph_min = 5.4;
-double ph_max = 6.5;
+double? ph_min;
+double? ph_max;
 
 int water_level_min = 2;
 int water_level_max = 3;
@@ -33,13 +34,17 @@ int globalEndMinute = 0;
 Future<void> fetchAndStoreSettings() async {
   try {
     var data = await settings.getDeviceSettings();
-
+    print(data);
     if (data != null) {
       // Extracting values from the response
-      tds_min = data['tds_min'] ?? tds_min;
-      tds_max = data['tds_max'] ?? tds_max;
-      ph_min = (data['ph_min'] as num?)?.toDouble() ?? ph_min;
-      ph_max = (data['ph_max'] as num?)?.toDouble() ?? ph_max;
+      dynamic TDS = data['TDS'];
+      dynamic phValues = data['pH'];
+      print(TDS);
+
+      tds_min = TDS['min'] ?? tds_min;
+      tds_max = TDS['max'] ?? tds_max;
+      ph_min = phValues['min'].toDouble() ?? ph_min;
+      ph_max = phValues['max']?.toDouble() ?? ph_max;
       globalStartHour = data['start_hour'] ?? globalStartHour;
       globalEndHour = data['end_hour'] ?? globalEndHour;
       globalStartMinute = data['start_minute'] ?? globalStartMinute;

@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:xen_bloom/features/home_screen/home_page.dart';
 import '../apis/get_devices_list.dart';
 import '../authentication_screens/globalVariable.dart';
+import './name_screen.dart';
 
 class ChooseSystem extends StatefulWidget {
   @override
@@ -38,7 +39,12 @@ class _ChooseSystemState extends State<ChooseSystem> {
           devices = devicesList;
           isLoading = false;
         });
-
+        if (devices.isEmpty) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => NameScreen()),
+          );
+        }
         print("Devices: $devicesList");
       } else {
         print("Document ID not found for the given UID.");
@@ -51,6 +57,15 @@ class _ChooseSystemState extends State<ChooseSystem> {
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  void checkDevices() async {
+    if (devices.isEmpty) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => NameScreen()),
+      );
     }
   }
 
@@ -206,6 +221,7 @@ class _ChooseSystemState extends State<ChooseSystem> {
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
+    fetchDevices();
 
     return Scaffold(
       backgroundColor: Colors.white,

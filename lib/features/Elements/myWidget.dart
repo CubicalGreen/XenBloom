@@ -177,7 +177,7 @@ class _containerWidgetState extends State<containerWidget> {
                             padding:
                                 const EdgeInsets.only(left: 16.0, right: 16.0),
                             child: Container(
-                              height: MediaQuery.of(context).size.height * 0.12,
+                              height: MediaQuery.of(context).size.height * 0.13,
                               padding: EdgeInsets.all(
                                   MediaQuery.of(context).size.width * 0.03),
                               decoration: BoxDecoration(
@@ -283,6 +283,7 @@ class _containerWidgetState extends State<containerWidget> {
                                 ElevatedButton(
                                   onPressed: () {
                                     // Handle Cancel button press
+                                    Navigator.pop(context);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,

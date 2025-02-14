@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:xen_bloom/features/other_screens/name_screen.dart';
 import 'features/Elements/customTextfield.dart';
 import 'features/other_screens/choose_system.dart';
 import 'package:uuid/uuid.dart';
+import '/features/apis/get_devices_list.dart';
 import './features/authentication_screens/globalVariable.dart';
 
 class ConnectScreen extends StatefulWidget {
@@ -13,6 +15,44 @@ class ConnectScreen extends StatefulWidget {
 }
 
 class _ConnectScreenState extends State<ConnectScreen> {
+  List<String> devices = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDevices();
+  }
+
+  void fetchDevices() async {
+    try {
+      String? userUid = globalUid;
+      String? documentId = await getDocumentNameByUserId(userUid);
+      globalDocumentId = documentId;
+
+      if (documentId != null) {
+        List<String> devicesList = await getDevicesField(documentId);
+
+        setState(() {
+          devices = devicesList;
+          isLoading = false;
+        });
+
+        print("Devices: $devicesList");
+      } else {
+        print("Document ID not found for the given UID.");
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Error fetching devices: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;

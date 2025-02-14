@@ -75,7 +75,8 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
     int hours = countdown ~/ 60;
     int minutes = countdown % 60;
     timer?.cancel();
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(Duration(minutes: 1), (timer) {
+      print("Current Minute: $countdown");
       if (countdown > 0) {
         setState(() {
           countdown--;
@@ -392,6 +393,7 @@ class _timeUpdateWidgetState extends State<timeUpdateWidget> {
                               ElevatedButton(
                                 onPressed: () {
                                   // Handle Cancel button press
+                                  Navigator.pop(context);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white, // Button color

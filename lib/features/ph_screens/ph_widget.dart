@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:xen_bloom/features/apis/get_settings.dart';
+import '../apis/change_device_range.dart';
 import 'dart:ui';
-
+import '../authentication_screens/globalVariable.dart';
 import '../Elements/customContainer.dart';
 
 class pHWidget extends StatefulWidget {
@@ -11,6 +14,96 @@ class pHWidget extends StatefulWidget {
 }
 
 class _pHWidgetState extends State<pHWidget> {
+  double minPH = (ph_min ?? 5.5);
+  double maxPH = (ph_max ?? 6.5);
+  final TextEditingController _minController = TextEditingController();
+  final TextEditingController _maxController = TextEditingController();
+
+  final deviceService = DeviceService();
+  final settings = GetSettings();
+
+  @override
+  void initState() {
+    super.initState();
+    _minController.text = minPH.toString();
+    _maxController.text = maxPH.toString();
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   fetchAndStorePHSettings();
+    // });
+  }
+
+  @override
+  void dispose() {
+    _minController.dispose();
+    _maxController.dispose();
+    super.dispose();
+  }
+
+  Future<void> fetchAndStorePHSettings() async {
+    try {
+      var data = await settings.getDeviceSettings();
+      if (data != null) {
+        dynamic phValues = data['pH'];
+
+        setState(() {
+          minPH = phValues['min']?.toDouble() ?? minPH;
+          maxPH = phValues['max']?.toDouble() ?? maxPH;
+        });
+
+        print(" PH Min: $minPH, PH Max: $maxPH");
+      }
+    } catch (e) {
+      print('Error fetching settings: $e');
+    }
+  }
+
+  void _showInputDialog(String label) {
+    TextEditingController controller = TextEditingController();
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Enter $label value'),
+            content: TextField(
+              controller: controller,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(hintText: 'Enter value'),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    double value = double.tryParse(controller.text) ?? 0.0;
+                    if (label == "Min.") {
+                      minPH = value;
+                    } else if (label == "Max.") {
+                      maxPH = value;
+                    }
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'OK',
+                  style: GoogleFonts.poppins(),
+                ),
+              )
+            ],
+          );
+        });
+  }
+
+  void _handleSave() {
+    ph_min = minPH;
+    ph_max = maxPH;
+    deviceService.changeDeviceRange();
+
+    Navigator.of(context).pop();
+  }
 
   void _showBottomSheet() {
     showModalBottomSheet(
@@ -23,18 +116,24 @@ class _pHWidgetState extends State<pHWidget> {
             // The grey and blurry background that covers the entire screen
             Positioned.fill(
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0), // Apply blur effect
+                filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
+                // Apply blur effect
                 child: Container(
-                  color: Color(0xFF494e52).withOpacity(0.5), // Grey color with opacity
+                  color: Color(0xFF494e52)
+                      .withOpacity(0.5), // Grey color with opacity
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top:35.0,right: 8),
+              padding: const EdgeInsets.only(top: 35.0, right: 8),
               child: Align(
                 alignment: Alignment.topRight,
                 child: IconButton(
-                  icon: Icon(Icons.arrow_drop_down_circle_outlined, color: Colors.white,size: 30,), // Down arrow icon
+                  icon: Icon(
+                    Icons.arrow_drop_down_circle_outlined,
+                    color: Colors.white,
+                    size: 30,
+                  ), // Down arrow icon
                   onPressed: () {
                     Navigator.pop(context); // Close the bottom sheet
                   },
@@ -45,16 +144,20 @@ class _pHWidgetState extends State<pHWidget> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.42, // Reduced height of the bottom sheet
+                height: MediaQuery.of(context).size.height *
+                    0.42, // Reduced height of the bottom sheet
+                width: MediaQuery.of(context).size.width,
                 child: Column(
                   children: <Widget>[
                     Expanded(
                       child: Column(
                         children: [
                           Align(
-                            alignment: Alignment.centerLeft, // Align the text to the left
+                            alignment: Alignment.centerLeft,
+                            // Align the text to the left
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 20.0), // Add padding to keep it away from the edge
+                              padding: const EdgeInsets.only(left: 20.0),
+                              // Add padding to keep it away from the edge
                               child: Text(
                                 'pH Balance',
                                 style: TextStyle(color: Colors.white),
@@ -62,13 +165,16 @@ class _pHWidgetState extends State<pHWidget> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                            padding:
+                                const EdgeInsets.only(left: 16.0, right: 16.0),
                             child: Container(
                               height: MediaQuery.of(context).size.height * 0.18,
-                              padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
+                              padding: EdgeInsets.all(
+                                  MediaQuery.of(context).size.width * 0.03),
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.03),
+                                borderRadius: BorderRadius.circular(
+                                    MediaQuery.of(context).size.width * 0.03),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,22 +183,30 @@ class _pHWidgetState extends State<pHWidget> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Container(
-                                        padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                                        padding: EdgeInsets.only(
+                                            left: 8.0, right: 8.0),
                                         decoration: BoxDecoration(
                                           color: Color(0xFF9cfca6),
-                                          borderRadius: BorderRadius.circular(20.0),
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
                                         ),
                                         child: Text(
                                           'Recommended',
                                           style: TextStyle(
-                                            fontSize: MediaQuery.of(context).size.width * 0.05,
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.05,
                                             color: Colors.black,
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: MediaQuery.of(context).size.height * 0.0075),
+                                  SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.0075),
                                   PHScaleWidget(),
                                 ],
                               ),
@@ -100,95 +214,156 @@ class _pHWidgetState extends State<pHWidget> {
                           ),
                           SizedBox(height: 6),
                           Padding(
-                            padding: const EdgeInsets.only(left: 14.0,right: 14),
+                            padding:
+                                const EdgeInsets.only(left: 14.0, right: 14),
                             child: Row(
                               children: [
                                 Expanded(
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height*0.12,
-                                    padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.03),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Min.',
-                                              style: TextStyle(
-                                                fontSize: MediaQuery.of(context).size.width * 0.05,
-                                                color: Colors.grey[600],
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      _showInputDialog("Min.");
+                                    },
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.13,
+                                      padding: EdgeInsets.all(
+                                          MediaQuery.of(context).size.width *
+                                              0.03),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(
+                                            MediaQuery.of(context).size.width *
+                                                0.03),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Min.',
+                                                style: GoogleFonts.poppins(
+                                                  fontSize:
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width *
+                                                          0.05,
+                                                  color: Colors.grey[600],
+                                                ),
                                               ),
-                                            ),
-                                            InkWell(
-                                              onTap: () {},
-                                              child: Image.asset(
-                                                'assets/images/refresh_icon.png', // Replace with your image path
-                                                width: MediaQuery.of(context).size.width * 0.07,
-                                                color: Colors.grey[400], // Apply the same color as the icon
+                                              InkWell(
+                                                onTap: () {},
+                                                child: Image.asset(
+                                                  'assets/images/refresh_icon.png',
+                                                  // Replace with your image path
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.07,
+                                                  color: Colors.grey[
+                                                      400], // Apply the same color as the icon
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: MediaQuery.of(context).size.height * 0.0075),
-                                        Text(
-                                          '5.5',
-                                          style: TextStyle(
-                                            fontSize: MediaQuery.of(context).size.width * 0.08,
-                                            // fontWeight: FontWeight.bold,
-                                            color: Colors.grey[800],
+                                            ],
                                           ),
-                                        ),
-                                      ],
+                                          SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.0075),
+                                          Text(
+                                            '$minPH',
+                                            style: GoogleFonts.poppins(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.08,
+                                              // fontWeight: FontWeight.bold,
+                                              color: Colors.grey[800],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                                SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.02),
                                 Expanded(
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height*0.12,
-                                    padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.03),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Max.',
-                                              style: TextStyle(
-                                                fontSize: MediaQuery.of(context).size.width * 0.05,
-                                                color: Colors.grey[600],
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      _showInputDialog("Max.");
+                                    },
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.13,
+                                      padding: EdgeInsets.all(
+                                          MediaQuery.of(context).size.width *
+                                              0.03),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(
+                                            MediaQuery.of(context).size.width *
+                                                0.03),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Max.',
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width *
+                                                          0.05,
+                                                  color: Colors.grey[600],
+                                                ),
                                               ),
-                                            ),
-                                            InkWell(
-                                              onTap: () {},
-                                              child: Image.asset(
-                                                'assets/images/refresh_icon.png', // Replace with your image path
-                                                width: MediaQuery.of(context).size.width * 0.07,
-                                                color: Colors.grey[400], // Apply the same color as the icon
+                                              InkWell(
+                                                onTap: () {},
+                                                child: Image.asset(
+                                                  'assets/images/refresh_icon.png',
+                                                  // Replace with your image path
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.07,
+                                                  color: Colors.grey[
+                                                      400], // Apply the same color as the icon
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: MediaQuery.of(context).size.height * 0.0075),
-                                        Text(
-                                          '6.5',
-                                          style: TextStyle(
-                                            fontSize: MediaQuery.of(context).size.width * 0.08,
-                                            // fontWeight: FontWeight.bold,
-                                            color: Colors.grey[800],
+                                            ],
                                           ),
-                                        ),
-                                      ],
+                                          SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.0075),
+                                          Text(
+                                            '$maxPH',
+                                            style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.08,
+                                              // fontWeight: FontWeight.bold,
+                                              color: Colors.grey[800],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -197,22 +372,30 @@ class _pHWidgetState extends State<pHWidget> {
                           ),
                           SizedBox(height: 6),
                           Padding(
-                            padding: const EdgeInsets.only(right: 16.0,left: 16),
+                            padding:
+                                const EdgeInsets.only(right: 16.0, left: 16),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
                                     // Handle Cancel button press
+                                    Navigator.pop(context);
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white, // Button color
-                                    minimumSize: Size(MediaQuery.of(context).size.width * 0.44, 50), // Increase size
+                                    backgroundColor: Colors.white,
+                                    // Button color
+                                    minimumSize: Size(
+                                        MediaQuery.of(context).size.width *
+                                            0.44,
+                                        50),
+                                    // Increase size
                                     textStyle: TextStyle(
                                       fontSize: 18, // Increase text size
                                     ),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8), // Reduced border radius
+                                      borderRadius: BorderRadius.circular(
+                                          8), // Reduced border radius
                                     ),
                                   ),
                                   child: Text(
@@ -220,21 +403,31 @@ class _pHWidgetState extends State<pHWidget> {
                                     style: TextStyle(color: Colors.black),
                                   ),
                                 ),
-                                SizedBox(width: 5,),
+                                SizedBox(
+                                  width: 5,
+                                ),
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    _handleSave();
+                                  },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.black, // Button color
-                                    minimumSize: Size(MediaQuery.of(context).size.width * 0.44, 50), // Increase size
+                                    backgroundColor: Colors.black,
+                                    // Button color
+                                    minimumSize: Size(
+                                        MediaQuery.of(context).size.width *
+                                            0.44,
+                                        50),
+                                    // Increase size
                                     textStyle: TextStyle(
                                       fontSize: 18, // Increase text size
                                     ),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8), // Reduced border radius
+                                      borderRadius: BorderRadius.circular(
+                                          8), // Reduced border radius
                                     ),
                                   ),
                                   child: Text(
-                                    'Reset',
+                                    'Save',
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),
@@ -252,6 +445,7 @@ class _pHWidgetState extends State<pHWidget> {
         );
       },
     );
+    // input box will appear with this func() :D
   }
 
   @override
@@ -261,6 +455,7 @@ class _pHWidgetState extends State<pHWidget> {
 
     return CustomContainer(
       onTap: () {
+        fetchAndStorePHSettings();
         _showBottomSheet();
       },
       height: h * 0.2,
@@ -271,8 +466,6 @@ class _pHWidgetState extends State<pHWidget> {
     );
   }
 }
-
-
 
 class PHScaleWidget extends StatefulWidget {
   @override
@@ -290,7 +483,6 @@ class _PHScaleWidgetState extends State<PHScaleWidget> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-
         Container(
           padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           decoration: BoxDecoration(
@@ -302,9 +494,8 @@ class _PHScaleWidgetState extends State<PHScaleWidget> {
             style: TextStyle(color: Colors.black),
           ),
         ),
-        SizedBox(height:4),
+        SizedBox(height: 4),
         Stack(
-
           // alignment: Alignment.center,
           children: [
             // Colorful pH Scale Container
@@ -329,7 +520,8 @@ class _PHScaleWidgetState extends State<PHScaleWidget> {
             ),
             // Indicator Line
             Positioned(
-              left: (_currentPHValue / 14) * (w * 0.9) + 2, // Adjust for line width
+              left: (_currentPHValue / 14) * (w * 0.9) + 2,
+              // Adjust for line width
               top: 0,
               child: Container(
                 width: 2,
@@ -338,7 +530,7 @@ class _PHScaleWidgetState extends State<PHScaleWidget> {
               ),
             ),
           ],
-        ), 
+        ),
       ],
     );
   }

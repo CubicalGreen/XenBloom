@@ -1,3 +1,5 @@
+import 'package:xen_bloom/features/apis/get_settings.dart';
+
 import '../Elements/customContainer.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
@@ -15,13 +17,59 @@ class _PpmContainerState extends State<PpmContainer> {
   String _maxConcentration = tds_max.toString();
   String _minConcentration = tds_min.toString();
   double staticValue = 827;
-  double _updatedMinConcentration = tds_min.toDouble();
-  double _updatedMaxConcentration = tds_max.toDouble();
+
+  double _updatedMinConcentration = (tds_min ?? 0).toDouble();
+  double _updatedMaxConcentration = (tds_max ?? 0).toDouble();
   bool _isSliderActive = false;
 
+  final settings = GetSettings();
   final deviceService = DeviceService();
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   fetchAndStoreTDSSettings();
+    // });
+    fetchAndStoreTDSSettings();
+  }
+
+  Future<void> fetchAndStoreTDSSettings() async {
+    setState(() {
+      _isLoading = false; // Start loading
+    });
+
+    try {
+      var data = await settings.getDeviceSettings();
+
+      if (data != null) {
+        dynamic TDS = data['TDS'];
+        setState(() {
+          tds_min = (TDS['min']);
+          tds_max = TDS['max'];
+          _updatedMaxConcentration = (tds_max ?? 0).toDouble();
+          _updatedMinConcentration = (tds_min ?? 0).toDouble();
+          _isLoading = false; // Data loaded, stop loading
+        });
+        print("Max TDS $tds_max, Min TDS: $tds_min");
+      } else {
+        print("Data retrieved was null!");
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Failed to access TDS Settings $e");
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   void _showBottomSheet() {
+    fetchAndStoreTDSSettings();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -58,102 +106,123 @@ class _PpmContainerState extends State<PpmContainer> {
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   height: MediaQuery.of(context).size.height * 0.36,
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
-                                child: Text(
-                                  'Concentration',
-                                  style:
-                                      GoogleFonts.poppins(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 16.0, right: 16.0),
-                              child: Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.13,
-                                padding: EdgeInsets.all(
-                                    MediaQuery.of(context).size.width * 0.03),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(
-                                      MediaQuery.of(context).size.width * 0.03),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.only(
-                                              left: 8.0, right: 8.0),
-                                          decoration: BoxDecoration(
-                                            color: Color(0xFF9cfca6),
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
+                  child: _isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ))
+                      : Column(
+                          children: <Widget>[
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 20.0),
+                                      child: Text(
+                                        'Concentration',
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 16.0, right: 16.0),
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.13,
+                                      padding: EdgeInsets.all(
+                                          MediaQuery.of(context).size.width *
+                                              0.03),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(
+                                            MediaQuery.of(context).size.width *
+                                                0.03),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.only(
+                                                    left: 8.0, right: 8.0),
+                                                decoration: BoxDecoration(
+                                                  color: Color(0xFF9cfca6),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20.0),
+                                                ),
+                                                child: Text(
+                                                  'Recommended',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.05,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          child: Text(
-                                            'Recommended',
-                                            style: GoogleFonts.poppins(
-                                              fontSize: MediaQuery.of(context)
+                                          SizedBox(
+                                              height: MediaQuery.of(context)
                                                       .size
-                                                      .width *
-                                                  0.05,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ),
+                                                      .height *
+                                                  0.0050),
+                                          // right here
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(12)),
+                                            child: _isSliderActive
+                                                ? _buildRangeSlider(
+                                                    setStateModal)
+                                                : _buildStaticSlider(),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 6),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 16.0, right: 16.0),
+                                    child: Row(
+                                      children: [
+                                        _buildValueContainer(
+                                            'Min.',
+                                            _updatedMinConcentration
+                                                .toString()),
+                                        SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.02),
+                                        _buildValueContainer(
+                                            'Max.',
+                                            _updatedMaxConcentration
+                                                .toString()),
                                       ],
                                     ),
-                                    SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.0050),
-                                    // right here
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(12)),
-                                      child: _isSliderActive
-                                          ? _buildRangeSlider(setStateModal)
-                                          : _buildStaticSlider(),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 6),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 16.0, right: 16.0),
-                              child: Row(
-                                children: [
-                                  _buildValueContainer('Min.',
-                                      _updatedMinConcentration.toString()),
-                                  SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.02),
-                                  _buildValueContainer('Max.',
-                                      _updatedMaxConcentration.toString()),
+                                  ),
+                                  SizedBox(height: 6),
+                                  _buildButtons(setStateModal),
                                 ],
                               ),
-                            ),
-                            SizedBox(height: 6),
-                            _buildButtons(setStateModal),
+                            )
                           ],
                         ),
-                      )
-                    ],
-                  ),
                 ),
               ),
             ],
@@ -167,8 +236,8 @@ class _PpmContainerState extends State<PpmContainer> {
     return SliderTheme(
       data: SliderTheme.of(context).copyWith(
           trackHeight: 8,
-          activeTickMarkColor: Colors.black,
-          inactiveTrackColor: Colors.deepPurple,
+          activeTrackColor: Colors.black,
+          inactiveTrackColor: Colors.black,
           thumbShape: CustomStaticThumbShape(staticValue)),
       child: Slider(
         value: staticValue,
@@ -282,8 +351,11 @@ class _PpmContainerState extends State<PpmContainer> {
               });
 
               if (!_isSliderActive == true) {
-                tds_min = _updatedMinConcentration.toInt();
-                tds_max = _updatedMaxConcentration.toInt();
+                setState(() {
+                  tds_min = _updatedMinConcentration.toInt();
+                  tds_max = _updatedMaxConcentration.toInt();
+                });
+
                 deviceService.changeDeviceRange();
               }
 
@@ -310,7 +382,7 @@ class _PpmContainerState extends State<PpmContainer> {
   Widget build(BuildContext context) {
     final double h = MediaQuery.of(context).size.height;
     final double w = MediaQuery.of(context).size.width;
-
+    // fetchAndStoreTDSSettings();
     return CustomContainer(
       onTap: _showBottomSheet,
       height: h * 0.2,

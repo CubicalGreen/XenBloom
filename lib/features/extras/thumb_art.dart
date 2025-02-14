@@ -37,7 +37,7 @@ class CustomStaticThumbShape extends SliderComponentShape {
       ..style = PaintingStyle.fill;
 
     final Paint borderPaint = Paint()
-      ..color = Colors.deepPurple
+      ..color = Colors.black
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 
